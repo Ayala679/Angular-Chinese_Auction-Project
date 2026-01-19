@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { GetUserDto } from '../models/user.model';
+import { GetUser } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({
@@ -12,10 +12,10 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  getAllUsers(): Observable<GetUserDto[]> {
-    return this.http.get<GetUserDto[]>(this.baseUrl);
+  getAllUsers(): Observable<GetUser[]> {
+    return this.http.get<GetUser[]>(this.baseUrl);
   }
 
-  
+
 
 }

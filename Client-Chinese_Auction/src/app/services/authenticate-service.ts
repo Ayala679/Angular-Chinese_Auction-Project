@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthenticateService {
-  private baseUrl: string = 'https://localhost:7172/api/user';
+  private baseUrl: string = 'https://localhost:7031/api/user';
 
   constructor(private http:HttpClient) {}
 

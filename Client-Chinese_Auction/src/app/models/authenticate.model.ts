@@ -1,13 +1,13 @@
-import { GetUserDto } from './user.model';
+import { GetUser } from './user.model';
 
 export class LoginRequestDto {
     Email!: string;
     Password!: string;
 }
 
-export class LoginResponseDto {
+export class LoginResponse {
     Token!: string;
     TokenType: string = "Bearer";
     ExpiresInMinutes!: number;
-    User: GetUserDto = new GetUserDto();
+    User: GetUser = new GetUser();
 }
