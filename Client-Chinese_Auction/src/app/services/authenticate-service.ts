@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginRequestDto } from '../models/authenticate.model';
+import { LoginRequest } from '../models/authenticate.model';
 import { CreateUser } from '../models/user.model';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 
 
 @Injectable({
@@ -14,8 +14,21 @@ export class AuthenticateService {
   constructor(private http:HttpClient) {}
 
   login(email: string, password: string) {
-    // Implement login logic here
+    const loginRequest: LoginRequest = {
+      Email: email, 
+      Password: password
+    };
+    const result = this.http.post<any>(`${this.baseUrl}/login`, loginRequest).pipe(
+      tap(response => {
+        localStorage.setItem('authToken', response.token);
+        localStorage.setItem('user', JSON.stringify(response.user));
+      })
+    );        
+    return result;
   }
+
+  
+
 
   logout() {
     // Implement logout logic here

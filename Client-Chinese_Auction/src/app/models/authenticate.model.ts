@@ -1,6 +1,6 @@
 import { GetUser } from './user.model';
 
-export class LoginRequestDto {
+export class LoginRequest {
     Email!: string;
     Password!: string;
 }

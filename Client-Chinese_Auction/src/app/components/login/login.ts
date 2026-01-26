@@ -11,48 +11,38 @@ import { InputMaskModule } from 'primeng/inputmask';
 import { AuthenticateService } from '../../services/authenticate-service';
 
 @Component({
-  selector: 'app-register',
+  selector: 'app-login',
   standalone: true,
   imports: [ReactiveFormsModule, FloatLabelModule, InputTextModule, ButtonModule, PasswordModule, MessageModule, ToastModule, InputMaskModule],
-  templateUrl: './register.html',
+  templateUrl: './login.html',
+  styleUrl: './login.scss',
   providers: [MessageService]
 })
-export class Register implements OnInit {
+export class Login {
+  
   messageService = inject(MessageService);
-  registerForm!: FormGroup;
+  authService = inject(AuthenticateService); 
+  loginForm!: FormGroup;
 
   ngOnInit() {
-    this.registerForm = new FormGroup({
+    this.loginForm = new FormGroup({
       Email: new FormControl('', [Validators.required, Validators.email]),
       Password: new FormControl('', [Validators.required, Validators.minLength(8)],),
-      ConfirmPassword: new FormControl('', [Validators.required]),
-      First_name: new FormControl('', [Validators.required]),
-      Last_name: new FormControl('', [Validators.required]),
-      Phone: new FormControl('', [Validators.pattern("^[0-9-]*$")]),
-    },{ validators: this.passwordValidator });
+    });
   }
 
-passwordValidator(control: AbstractControl) {
-  const isMatch = control.get('Password')?.value === control.get('ConfirmPassword')?.value;
-  control.get('ConfirmPassword')?.setErrors(isMatch ? null : { mismatch: true });
-  return isMatch ? null : { mismatch: true };
-}
-
-
 isInvalid(name: string) {
-  const control = this.registerForm.get(name);
+  const control = this.loginForm.get(name);
   return control ? control.invalid && (control.touched || control.dirty) : false;
 }
 
-authService = inject(AuthenticateService); 
-
 onSubmit() {
-    const { Email, Password, First_name, Last_name, Phone } = this.registerForm.value;
-    this.authService.register(Email, Password, First_name, Last_name, Phone).subscribe({
+    const { Email, Password } = this.loginForm.value;
+    this.authService.login(Email, Password).subscribe({
       next: (response) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User registered successfully!', life: 3000 });
         console.log('User registered:', response);
-        this.registerForm.reset(); 
+        this.loginForm.reset(); 
       },
       error: (err) => {
         this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error , life: 3000 });
@@ -60,4 +50,5 @@ onSubmit() {
       }
     });
   }
+
 }
