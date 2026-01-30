@@ -9,7 +9,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { InputMaskModule } from 'primeng/inputmask';
 import { AuthenticateService } from '../../services/authenticate-service';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -19,7 +19,7 @@ import { AuthenticateService } from '../../services/authenticate-service';
   providers: [MessageService]
 })
 export class Login {
-  
+  router = inject(Router);
   messageService = inject(MessageService);
   authService = inject(AuthenticateService); 
   loginForm!: FormGroup;
@@ -40,15 +40,18 @@ onSubmit() {
     const { Email, Password } = this.loginForm.value;
     this.authService.login(Email, Password).subscribe({
       next: (response) => {
-        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User registered successfully!', life: 3000 });
-        console.log('User registered:', response);
+        this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User logged successfully!', life: 3000 });
+        console.log('User logged:', response);
         this.loginForm.reset(); 
+        this.router.navigate(['/']);
+
       },
       error: (err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error , life: 3000 });
+        const errorMessage = err.error?.detail || err.error?.title || (typeof err.error === 'string' ? err.error : 'פרטי התחברות שגויים');
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage , life: 3000 });
         console.error('Registration error:', err);
       }
     });
   }
-
+ 
 }
