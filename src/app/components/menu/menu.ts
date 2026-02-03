@@ -10,19 +10,20 @@ import { icon } from '@primeuix/themes/aura/avatar';
 import { RouterModule } from '@angular/router';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { AuthenticateService } from '../../services/authenticate-service';
-import { CategoryDto } from '../../models/category.model';
 import { CategoryService } from '../../services/category-service';
-
+import { InputIconModule } from 'primeng/inputicon';
+import { IconFieldModule } from 'primeng/iconfield';
+import { FloatLabelModule } from 'primeng/floatlabel';
 @Component({
     selector: 'app-menu', // וודאי שזה השם שבו את משתמשת
     standalone: true,    // אם את באנגולר חדש
-    imports: [CommonModule, MenuModule, ButtonModule, InputTextModule, BadgeModule, AvatarModule, RouterModule, ButtonGroupModule, AsyncPipe],
+    imports: [CommonModule, MenuModule, ButtonModule, InputTextModule, BadgeModule, AvatarModule, RouterModule, ButtonGroupModule, AsyncPipe, InputIconModule, IconFieldModule, FloatLabelModule],
     templateUrl: './menu.html', // וודאי שהנתיב כאן נכון
     styleUrls: ['./menu.scss']
 })
 export class Menu implements OnInit {
 
-    readonly IMAGE_BASE_URL = 'https://localhost:7031/images/';
+    readonly IMAGE_BASE_URL = 'https://localhost:7031/images/categories/';
     categoryService = inject(CategoryService);
     authService = inject(AuthenticateService);
     user = JSON.parse(localStorage.getItem('user')!);
@@ -31,6 +32,8 @@ export class Menu implements OnInit {
     userMenuItems: MenuItem[] | undefined;
     isLoggedIn = false;
 
+    sidebarVisible: boolean = false;
+    searchValue: string = '';
 
     categories: any[] = [];
 
@@ -65,7 +68,7 @@ export class Menu implements OnInit {
         ];
 
         this.categoryService.getCategories().subscribe({
-            next: (data:any[]) => {
+            next: (data: any[]) => {
                 this.categories = data;
                 console.log('Categories loaded:', this.categories);
             },

@@ -19,6 +19,6 @@ export class GetUser {
     First_name!: string;
     Last_name!: string;
     Phone?: string;
-    Role!: number; // מיוצג כ-Enum Role
+    Role!: number; 
     Purchases: GetPurchaseDto[] = [];
 }

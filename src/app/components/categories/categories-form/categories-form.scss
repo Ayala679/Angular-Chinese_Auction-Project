@@ -1,0 +1,51 @@
+/* מירכוז הטופס במרכז המסך */
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    width: 100%;
+    direction: rtl;
+    background-color: #f4f7f6;
+}
+
+.card {
+    background: white;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 450px;
+}
+
+/* שם הקובץ כטקסט פשוט */
+.simple-text-name {
+    display: block;
+    font-size: 0.9rem;
+    color: #555;
+    margin: 10px 0 5px 0;
+}
+
+
+
+/* הודעת שגיאה פשוטה בטקסט */
+.error-text {
+    color: #d32f2f;
+    font-size: 0.8rem;
+    margin-top: 4px;
+}
+
+
+.p-dialog{
+    width: 10px;
+}
+
+// ::v-deep .p-image-toolbar {
+//     right: 10px; left: auto; 
+//     background: transparent !important; 
+// }
+
+// ::v-deep .p-image-action {
+//     background: #00b894 !important;
+//     border-radius: 50%;
+// }
