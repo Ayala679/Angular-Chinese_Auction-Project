@@ -42,9 +42,8 @@ export class PackageForm implements OnInit {
 
   private initForm() {
     this.packageForm = new FormGroup({
-      id: new FormControl(null),
       name: new FormControl('', [Validators.required, Validators.maxLength(30)]),
-      description: new FormControl('', [Validators.required, Validators.maxLength(100)]),
+      description: new FormControl('', [Validators.required, Validators.maxLength(1000)]),
       cards_quantity: new FormControl(null, [Validators.required, Validators.min(1)]),
       price: new FormControl(null, [Validators.required, Validators.min(0)])
     });

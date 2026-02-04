@@ -30,7 +30,6 @@
               "node_modules/primeicons/primeicons.css",
               "src/styles.scss"
             ]
-
           },
           "configurations": {
             "production": {

@@ -1,25 +1,3 @@
-<!-- <div class="card p-4" [formGroup]="packageForm">
-    <h3 class="mt-0 mb-4 text-primary">
-        {{ config.data ? 'עריכת חבילה: ' + config.data.name : 'הוספת חבילה חדשה' }}
-    </h3>
-
-
-    <div class="flex flex-column gap-2 mb-4">
-        <label for="name" class="font-bold">שם החבילה</label>
-        <input pInputText id="name" formControlName="name" placeholder="הכנס שם..." class="w-full" />
-        @if (packageForm.get('name')?.invalid && packageForm.get('name')?.touched) {
-            <small class="p-error">חובה להזין שם לחבילה</small>
-        }
-    </div>
-
-
-    <div class="flex justify-content-end gap-2 mt-5">
-        <p-button label="ביטול" icon="pi pi-times" [text]="true" severity="secondary" (click)="cancel()" />
-        <p-button label="שמור" icon="pi pi-check" (click)="save()" [disabled]="packageForm.invalid" />
-    </div>
-</div>
-
-<p-toast position="bottom-left" /> -->
 
 
 <div class="card p-4" [formGroup]="packageForm">
@@ -39,7 +17,7 @@
         <label for="description" class="font-bold">תיאור</label>
         <textarea pInputTextarea id="description" formControlName="description" rows="3" placeholder="הכנס תיאור קצר..." class="w-full"></textarea>
         @if (packageForm.get('description')?.invalid && packageForm.get('description')?.touched) {
-            <small class="p-error">חובה להזין תיאור (עד 100 תווים)</small>
+            <small class="p-error">חובה להזין תיאור (עד 1000 תווים)</small>
         }
     </div>
 
