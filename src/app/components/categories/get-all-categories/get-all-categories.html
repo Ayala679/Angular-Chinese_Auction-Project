@@ -1,25 +1,3 @@
-<!-- <div class="mb-4 p-8 flex items-center justify-center gap-4">
-    @for( category of (categories$ | async); track category.id){
-    <p-card [style]="{ width: '20rem', overflow: 'hidden' }">
-        <ng-template #header>
-            <img alt="Card" src="{{ IMAGE_BASE_URL }}{{category.picture}}"
-                [style]="{ width: '100%', height: '200px', 'object-fit': 'cover', 'display': 'block' }" />
-        </ng-template>
-
-        <ng-template #title>
-            <div style="padding: 10px 0;">{{category.name}}</div>
-        </ng-template>
-        <ng-template #footer>
-            <div class="flex gap-4 mt-1">
-                <p-button label="" icon = "pi pi-pencil" severity="secondary" class="w-full" [outlined]="true" styleClass="w-full" (click)="onEditCategory(category.id)"/>
-                <p-button label="" icon = "pi pi-trash" class="w-full" styleClass="w-full" (click)="onDeleteCategory(category.id)"/>
-            </div>
-        </ng-template>
-    </p-card>
-    }
-</div>
-<p-button label="הוספת קטגוריה" icon="pi pi-plus" (onClick)="showChild()"></p-button>
- -->
 <p-toast/>
 @if (role=='0') {
 <p-button label="הוספת קטגוריה" icon="pi pi-plus" (onClick)="showChild()"></p-button>
@@ -33,7 +11,6 @@
                 <img alt="Card" [src]="IMAGE_BASE_URL + category.picture"
                     [style]="{ width: '100%', height: '200px', 'object-fit': 'cover', 'display': 'block' }" />
             </ng-template>
-
             <ng-template #title>
                 <div class="text-center font-bold py-2">{{ category.name }}</div>
                 @if (role=='0') {
