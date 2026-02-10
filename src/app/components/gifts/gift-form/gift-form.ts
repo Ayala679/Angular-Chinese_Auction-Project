@@ -64,17 +64,18 @@ export class GiftForm implements OnInit {
   ngOnInit() {
     console.log(this.config.data);
     this.categories$ = this.categoryService.getCategories();
-   
+
     this.donors$ = this.donorService.getDonors();
     this.initForm();
 
 
     if (this.config.data) {
+
       this.giftForm.patchValue(this.config.data);
       if (this.config.data.picture) {
         this.previewImage = this.BASE_IMG_URL + this.config.data.picture;
       }
-      if(this.config.data.category_Id){
+      if (this.config.data.category_Id) {
         this.giftForm.get('category_Id')?.setValue(this.config.data.category_Id);
       }
     }
@@ -102,6 +103,7 @@ export class GiftForm implements OnInit {
   onFileSelect(event: any) {
     const file = event.files[0];
     if (file) {
+      this.selectedFile = file;
       this.giftForm.patchValue({ picture: file });
       const reader = new FileReader();
       reader.onload = (e: any) => this.previewImage = e.target.result;
@@ -123,12 +125,13 @@ export class GiftForm implements OnInit {
     if (this.giftForm.valid) {
 
       const result = this.giftForm.value
-      console.log(result);
-      
       if (this.config.data?.id) result.id = this.config.data.id;
       if (this.config.data && !this.selectedFile) {
-      result.picture = this.config.data.picture;
-    }
+        result.picture = this.config.data.picture;
+      }
+      else {
+        result.picture = this.selectedFile;
+      }
       this.ref.close(result);
     }
     else {
