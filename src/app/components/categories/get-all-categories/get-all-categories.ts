@@ -7,10 +7,11 @@ import { CategoriesForm } from '../categories-form/categories-form';
 import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { Router, RouterModule } from '@angular/router';
 @Component({
   selector: 'app-get-all-categories',
   standalone: true,
-  imports: [ButtonModule, CardModule, AsyncPipe, DynamicDialogModule, ToastModule],
+  imports: [ButtonModule, CardModule, AsyncPipe, DynamicDialogModule, ToastModule, RouterModule],
   providers: [DialogService, MessageService],
   templateUrl: './get-all-categories.html',
   styleUrl: './get-all-categories.scss',
@@ -25,6 +26,13 @@ export class GetAllCategories {
   user: string = localStorage.getItem('user') || '';
   role: string = this.user ? JSON.parse(this.user).role : '';
   isChildVisible: boolean = false;
+
+
+  router = inject(Router);
+
+  navigateToGifts(categoryId: number) {
+    this.router.navigate(['/gifts', categoryId]);
+  }
 
 
   showChild() {

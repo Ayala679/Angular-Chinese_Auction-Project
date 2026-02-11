@@ -71,7 +71,7 @@
 
         <ul class="nav-links hidden md:flex list-none gap-2 p-0 m-0 align-items-center mr-4">
             <li class="has-mega relative py-3 px-4 cursor-pointer font-medium text-gray-300 transition-colors hover:text-primary"
-                (mouseenter)="showMenu = true" (mouseleave)="showMenu = false" routerLink="categories">
+                (mouseenter)="showMenu = true" (mouseleave)="showMenu = false">
                 קטגוריות <span class="arrow transition-transform inline-block mr-1">▾</span>
 
                 <div class="mega-menu absolute top-90 right-0 z-5 surface-card shadow-8 border-round-2xl p-4 w-30rem"
@@ -79,15 +79,13 @@
 
                     <div class="grid flex-row-reverse hover:border-1 border- p-2">
                         <div class="col-4 p-2" *ngFor="let item of categories | slice:0:3; let i = index">
-                            <div class="menu-card flex flex-column align-items-center gap-2 border-1 border-gray-500 hover:border-orange-500 p-3 border-round-lg transition-all"
-                                [style.animation-delay]="i * 0.1 + 's'">
-
-                                <div
-                                    class="image-placeholder relative w-full h-6rem overflow-hidden border-round-xl shadow-4">
+                            <div (click)="navigateToGifts(item.id)" class="menu-card flex flex-column align-items-center gap-2 border-1 border-gray-500 hover:border-orange-500 p-3 border-round-lg transition-all"
+                                [style.animation-delay]="i * 0.1 + 's'" >
+                                <div class="image-placeholder relative w-full h-6rem overflow-hidden border-round-xl shadow-4">
                                     <img *ngIf="item.picture" [src]="IMAGE_BASE_URL+item.picture" [alt]="item.name"
                                         class="cat-img w-full h-full object-cover">
                                 </div>
-                                <h3 class="text-sm font-bold m-0 text-white text-center">{{ item.name }}</h3>
+                                <h3 class="text-sm font-bold m-0 text-black text-center">{{ item.name }}</h3>
                             </div>
                         </div>
                     </div>
@@ -101,7 +99,8 @@
                     </div>
                 </div>
             </li>
-            <li><a routerLink="/donors">donors</a></li>
+            @if(user && user.role == 0){<li><a routerLink="/donors">donors</a></li>}
+            <li><a routerLink="/gifts">gifts</a></li>
         </ul>
 
         <div class="flex align-items-center gap-4 mr-auto">

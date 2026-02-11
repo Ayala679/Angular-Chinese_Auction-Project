@@ -22,11 +22,11 @@ import { maxLength } from '@angular/forms/signals';
     FileUploadModule,
     ToastModule,
     ImageModule,
-    ReactiveFormsModule,  
+    ReactiveFormsModule,
     FormsModule,
     CheckboxModule,
   ],
-  providers: [MessageService], 
+  providers: [MessageService],
   templateUrl: './donor-form.html',
   styleUrl: './donor-form.scss',
 })
@@ -35,18 +35,22 @@ export class DonorForm implements OnInit {
   private ref = inject(DynamicDialogRef);
   config = inject(DynamicDialogConfig);
   donorForm!: FormGroup;
-  previewImage:any = null;
+  previewImage: any = null;
   checked: boolean = false;
   readonly BASE_IMG_URL = 'https://localhost:7031/images/companies/';
 
-selectedFile: File | null = null;
+  selectedFile: File | null = null;
 
   ngOnInit() {
+    console.log(this.config.data);
+
     this.initForm();
 
 
     if (this.config.data) {
       this.donorForm.patchValue(this.config.data);
+      const isPublish = !!this.config.data.is_publish;
+      this.donorForm.get('is_publish')?.setValue(isPublish);
       if (this.config.data.company_picture) {
         this.previewImage = this.BASE_IMG_URL + this.config.data.company_picture;
       }
@@ -59,7 +63,7 @@ selectedFile: File | null = null;
       email: new FormControl('', [Validators.required, Validators.email]),
       first_name: new FormControl('', [Validators.required, Validators.minLength(2)]),
       last_name: new FormControl('', [Validators.required, Validators.minLength(2)]),
-      phone: new FormControl('',[ Validators.pattern('^\\+?[0-9]\\d{1,14}$')]),
+      phone: new FormControl('', [Validators.pattern('^\\+?[0-9]\\d{1,14}$')]),
       password: new FormControl('', [Validators.required, Validators.minLength(6)]),
       is_publish: new FormControl(false),
       company_name: new FormControl(''),
@@ -74,7 +78,7 @@ selectedFile: File | null = null;
   onFileSelect(event: any) {
     const file = event.files[0];
     if (file) {
-      this.donorForm.patchValue({company_picture : file });
+      this.donorForm.patchValue({ company_picture: file });
       const reader = new FileReader();
       reader.onload = (e: any) => this.previewImage = e.target.result;
       reader.readAsDataURL(file);
@@ -86,14 +90,14 @@ selectedFile: File | null = null;
     if (fileUpload) {
       fileUpload.clear();
     }
-    this.donorForm.get('picture')?.setValue(null);
+    this.donorForm.get('company_picture')?.setValue(null);
     this.previewImage = null;
   }
 
 
   save() {
     if (this.donorForm.valid) {
-      const result = this.donorForm.value      
+      const result = this.donorForm.value
       this.ref.close(result);
     }
     else {

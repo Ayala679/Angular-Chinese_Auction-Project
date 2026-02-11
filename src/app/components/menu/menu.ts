@@ -7,7 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
 import { icon } from '@primeuix/themes/aura/avatar';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { AuthenticateService } from '../../services/authenticate-service';
 import { CategoryService } from '../../services/category-service';
@@ -36,7 +36,7 @@ export class Menu implements OnInit {
     searchValue: string = '';
 
     categories: any[] = [];
-
+    router = inject(Router);
 
 
     onLogout(event?: MouseEvent) {
@@ -62,6 +62,8 @@ export class Menu implements OnInit {
         this.showMenu = false;
     }
     ngOnInit() {
+        console.log(this.user);
+
         this.userMenuItems = [
             { label: 'הגדרות חשבון', icon: 'pi pi-user-edit' },
             { label: 'התנתקות (Logout)', icon: 'pi pi-sign-out', command: () => this.onLogout() }
@@ -76,6 +78,10 @@ export class Menu implements OnInit {
                 console.error('Error loading categories:', err);
             }
         });
+    }
+
+    navigateToGifts(categoryId: number) {
+        this.router.navigate(['/gifts', categoryId]);
     }
 
 

@@ -29,10 +29,11 @@
         <small class="p-error">חובה להזין אימייל תקין</small>
         }
     </div>
+
+    //להוריד את השדה סיסמא
     <div class="flex flex-column gap-2 mb-4">
         <label for="password" class="font-bold">סיסמה</label>
-        <input pInputText id="password" type="password" formControlName="password" placeholder="הכנס סיסמה..."
-            class="w-full" />
+        <input pInputText id="password" type="password" formControlName="password" placeholder="הכנס סיסמה..." class="w-full" />
         @if (donorForm.get('password')?.invalid && donorForm.get('password')?.touched) {
         <small class="p-error">חובה להזין סיסמה (לפחות 8 תווים)</small>
         }
