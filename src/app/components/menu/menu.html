@@ -79,9 +79,11 @@
 
                     <div class="grid flex-row-reverse hover:border-1 border- p-2">
                         <div class="col-4 p-2" *ngFor="let item of categories | slice:0:3; let i = index">
-                            <div (click)="navigateToGifts(item.id)" class="menu-card flex flex-column align-items-center gap-2 border-1 border-gray-500 hover:border-orange-500 p-3 border-round-lg transition-all"
-                                [style.animation-delay]="i * 0.1 + 's'" >
-                                <div class="image-placeholder relative w-full h-6rem overflow-hidden border-round-xl shadow-4">
+                            <div (click)="navigateToGifts(item.id)"
+                                class="menu-card flex flex-column align-items-center gap-2 border-1 border-gray-500 hover:border-orange-500 p-3 border-round-lg transition-all"
+                                [style.animation-delay]="i * 0.1 + 's'">
+                                <div
+                                    class="image-placeholder relative w-full h-6rem overflow-hidden border-round-xl shadow-4">
                                     <img *ngIf="item.picture" [src]="IMAGE_BASE_URL+item.picture" [alt]="item.name"
                                         class="cat-img w-full h-full object-cover">
                                 </div>
@@ -101,6 +103,8 @@
             </li>
             @if(user && user.role == 0){<li><a routerLink="/donors">donors</a></li>}
             <li><a routerLink="/gifts">gifts</a></li>
+            <li><a routerLink="/basket">basket</a></li>
+
         </ul>
 
         <div class="flex align-items-center gap-4 mr-auto">

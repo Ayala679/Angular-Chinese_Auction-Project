@@ -24,7 +24,6 @@ import { GiftService } from '../../../services/gift-service';
     ToolbarModule, DialogModule, ConfirmDialogModule, InputTextModule,
     TagModule, DynamicDialogModule
   ],
-  providers: [DialogService, MessageService, ConfirmationService],
   templateUrl: './get-all-donors.html',
   styleUrl: './get-all-donors.scss'
 })
@@ -71,6 +70,8 @@ export class GetAllDonors implements OnInit {
 
   onRowExpand(event: TableRowExpandEvent) {
     this.messageService.add({ severity: 'info', summary: 'Product Expanded', detail: event.data.name, life: 3000 });
+            console.log('donor: ',this.donors);
+
   }
 
   onRowCollapse(event: TableRowCollapseEvent) {
@@ -105,6 +106,7 @@ export class GetAllDonors implements OnInit {
             this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: err.error });
           }
         });
+        
       }
     });
   }

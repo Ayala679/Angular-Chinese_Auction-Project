@@ -12,7 +12,7 @@ import { Router, RouterModule } from '@angular/router';
   selector: 'app-get-all-categories',
   standalone: true,
   imports: [ButtonModule, CardModule, AsyncPipe, DynamicDialogModule, ToastModule, RouterModule],
-  providers: [DialogService, MessageService],
+  providers: [],
   templateUrl: './get-all-categories.html',
   styleUrl: './get-all-categories.scss',
 })

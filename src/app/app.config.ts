@@ -5,8 +5,10 @@ import { ApplicationConfig } from '@angular/core';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { provideHttpClient } from '@angular/common/http';
+import { Dialog } from 'primeng/dialog';
+import { DialogService } from 'primeng/dynamicdialog';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -20,6 +22,8 @@ export const appConfig: ApplicationConfig = {
             }
         }),
     MessageService,
+    ConfirmationService,
+    DialogService,
     provideHttpClient()
   ]
 };

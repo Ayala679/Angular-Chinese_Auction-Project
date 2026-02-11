@@ -23,7 +23,6 @@ import { ImageModule } from 'primeng/image';
     ReactiveFormsModule,
     InputNumberModule
   ],
-  providers: [MessageService],
   templateUrl: './package-form.html',
   styleUrl: './package-form.scss',
 })

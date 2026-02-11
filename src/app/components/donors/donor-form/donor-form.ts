@@ -26,7 +26,6 @@ import { maxLength } from '@angular/forms/signals';
     FormsModule,
     CheckboxModule,
   ],
-  providers: [MessageService],
   templateUrl: './donor-form.html',
   styleUrl: './donor-form.scss',
 })

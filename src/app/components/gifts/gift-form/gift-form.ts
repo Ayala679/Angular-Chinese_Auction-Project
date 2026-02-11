@@ -40,7 +40,6 @@ import { FloatLabelModule } from 'primeng/floatlabel';
     SelectModule,
     FloatLabelModule
   ],
-  providers: [MessageService],
   templateUrl: './gift-form.html',
   styleUrl: './gift-form.scss',
 })

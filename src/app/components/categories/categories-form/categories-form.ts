@@ -22,7 +22,7 @@ import { ImageModule } from 'primeng/image';
     ImageModule,
     ReactiveFormsModule
   ],
-  providers: [MessageService],
+  providers: [],
   templateUrl: './categories-form.html',
   styleUrl: './categories-form.scss',
 })

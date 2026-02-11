@@ -15,7 +15,6 @@ import { RouterModule } from '@angular/router';
   selector: 'app-get-all-packages',
   standalone: true,
   imports: [ButtonModule, CardModule, AsyncPipe, DynamicDialogModule, ToastModule, CommonModule, RouterModule],
-  providers: [DialogService, MessageService],
   templateUrl: './get-all-packages.html',
   styleUrl: './get-all-packages.scss',
 })
@@ -35,7 +34,7 @@ export class GetAllPackages {
   user: string = localStorage.getItem('user') || '';
   role: string = this.user ? JSON.parse(this.user).role : '';
   isChildVisible: boolean = false;
-  userPackages: any[] = JSON.parse(localStorage.getItem('userPackages') || '[]');
+  userPackages: any[] = JSON.parse(localStorage.getItem(JSON.parse(this.user).id) || '[]');
   showChild() {
     this.ref = this.dialogService.open(PackageForm, {
       header: 'הוספת חבילה חדשה',
@@ -72,23 +71,33 @@ export class GetAllPackages {
 
   addPackage(packageData: any) {
     packageData.quantity = (packageData.quantity || 0) + 1
-    this.userPackages.push({ id: packageData.id.toString(), emptyQuantity: 0, cards: [] });
-    localStorage.setItem('userPackages', JSON.stringify(this.userPackages));
+    this.userPackages.push({ id: packageData.id.toString(),packageName:packageData.name, price: packageData.price, cards_quantity: packageData.cards_quantity , emptyQuantity: packageData.cards_quantity, cards: [] });
+    const u=JSON.parse(this.user).id;
+    localStorage.setItem(u, JSON.stringify(this.userPackages));
   }
 
   removePackage(packageData: any) {
     
     packageData.quantity = (packageData.quantity || 0) > 0 ? packageData.quantity - 1 : 0
     let flag = false;
-    this.userPackages = this.userPackages.filter((pkg: any) => {
+    this.userPackages = this.userPackages.reverse().filter((pkg: any) => {
       if (pkg.id === packageData.id.toString() && !flag) {
+        if(pkg.emptyQuantity < packageData.cards_quantity) {
+          //dialog???
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'הסרת חבילה',
+            detail: 'החבילה שהסרת מכילה כרטיסים, כל הכרטיסים הוסרו יחד עם החבילה',
+            life: 3000
+          });
+        }
         flag = true;
       }
       else {
         return pkg;
       }
-    });
-    localStorage.setItem('userPackages', JSON.stringify(this.userPackages));
+    }).reverse();
+    localStorage.setItem(JSON.parse(this.user).id, JSON.stringify(this.userPackages));
   }
 
   onEditPackage(id: any) { }

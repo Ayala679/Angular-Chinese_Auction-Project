@@ -15,8 +15,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [ReactiveFormsModule, FloatLabelModule, InputTextModule, ButtonModule, PasswordModule, MessageModule, ToastModule, InputMaskModule],
   templateUrl: './login.html',
-  styleUrl: './login.scss',
-  providers: [MessageService]
+  styleUrl: './login.scss'
 })
 export class Login {
   router = inject(Router);
