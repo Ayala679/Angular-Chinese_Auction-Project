@@ -2,13 +2,14 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { form } from '@angular/forms/signals';
 import { image } from '@primeuix/themes/aura/chip';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class GiftService {
   baseUrl: string = 'https://localhost:7031/api/Gift';
-  constructor(private http:HttpClient){}
+  constructor(private http:HttpClient, private cookieService: CookieService){}
   getGifts(){
     return this.http.get<any>(`${this.baseUrl}`);
   }
@@ -16,7 +17,7 @@ export class GiftService {
     return this.http.get<any>(`${this.baseUrl}/${id}`);
   }
   addGift(giftData:any,imageFile:File){
-    const token = localStorage.getItem('authToken');
+    const token = this.cookieService.get('authToken');
     const headers = { 'Authorization': `Bearer ${token}` }
     const formData = new FormData();
     formData.append('Name', giftData.name);
@@ -30,7 +31,7 @@ export class GiftService {
     return this.http.post<any>(`${this.baseUrl}`, formData, { headers });
   }
   updateGift(id:number, giftData:any,imageFile:File){
-    const token = localStorage.getItem('authToken');
+    const token = this.cookieService.get('authToken');
     const headers = { 'Authorization': `Bearer ${token}` }
     const formData = new FormData();
     formData.append('Name', giftData.name);
@@ -45,13 +46,13 @@ export class GiftService {
   }
 
   deleteGift(id:number){
-    const token = localStorage.getItem('authToken');
+    const token = this.cookieService.get('authToken');
     const headers = { 'Authorization': `Bearer ${token}` }
     return this.http.delete<any>(`${this.baseUrl}/${id}`, { headers, responseType: 'text' as 'json' });
   }
 
   UpdateGiftPurchasesQuantity(id: number, quantity: number) {
-    const token = localStorage.getItem('authToken');
+    const token = this.cookieService.get('authToken');
     const headers = { 'Authorization': `Bearer ${token}` }
     return this.http.put<any>(`${this.baseUrl}/${id}/UpdatePurchasesQuantity?quantity=${quantity}`, null, { headers });
   }

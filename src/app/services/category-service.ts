@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { CookieService } from 'ngx-cookie-service';
 
 
 @Injectable({
@@ -7,7 +8,7 @@ import { Injectable } from '@angular/core';
 })
 export class CategoryService {
   baseUrl: string = 'https://localhost:7031/api/Category';
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private cookieService: CookieService) { }
   getCategories() {
     return this.http.get<any>(`${this.baseUrl}`);
   }
@@ -15,7 +16,7 @@ export class CategoryService {
     return this.http.get<any>(`${this.baseUrl}/${id}`);
   }
   addCategory(categoryData: any, imageFile: File) {
-    const token = localStorage.getItem('authToken');
+    const token = this.cookieService.get('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     const formData = new FormData();
     formData.append('Name', categoryData.name);
@@ -26,7 +27,7 @@ export class CategoryService {
     return this.http.post<any>(`${this.baseUrl}`, formData, { headers });
   }
   updateCategory(id: number, categoryData: any, imageFile: File) {
-    const token = localStorage.getItem('authToken');
+    const token = this.cookieService.get('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     const formData = new FormData();
     formData.append('Name', categoryData.name);
@@ -37,7 +38,7 @@ export class CategoryService {
     return this.http.put<any>(`${this.baseUrl}/${id}`, formData, { headers });
   }
   deleteCategory(id: number) {
-    const token = localStorage.getItem('authToken');
+    const token = this.cookieService.get('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.delete<any>(`${this.baseUrl}/${id}`, { headers, responseType: 'text' as 'json' });
   }

@@ -10,6 +10,7 @@ import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { map } from 'rxjs';
 import { RouterModule } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-get-all-packages',
@@ -22,6 +23,7 @@ export class GetAllPackages {
   messageService = inject(MessageService);
   dialogService = inject(DialogService);
   packageService = inject(PackageService);
+  private cookieService = inject(CookieService);
   packages$: any = this.packageService.getpackages().pipe(
   map((packages: any[]) => {
     return packages.map(pkg => {
@@ -31,10 +33,17 @@ export class GetAllPackages {
   })
 );
   ref: DynamicDialogRef<any> | null = null;
-  user: string = localStorage.getItem('user') || '';
-  role: string = this.user ? JSON.parse(this.user).role : '';
+  user: string = this.cookieService.get('user') || '';
+  role: string = this.user && this.user !== 'undefined' && this.user !== '' ? JSON.parse(this.user).role || '' : '';
   isChildVisible: boolean = false;
-  userPackages: any[] = JSON.parse(localStorage.getItem(JSON.parse(this.user).id) || '[]');
+  userPackages: any[] = (() => {
+    if (!this.user || this.user === 'undefined' || this.user === '') return [];
+    const parsedUser = JSON.parse(this.user);
+    const userId = parsedUser?.id;
+    if (!userId) return [];
+    const cookieData = this.cookieService.get(userId) || '[]';
+    return (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
+  })();
   showChild() {
     this.ref = this.dialogService.open(PackageForm, {
       header: 'הוספת חבילה חדשה',
@@ -72,8 +81,12 @@ export class GetAllPackages {
   addPackage(packageData: any) {
     packageData.quantity = (packageData.quantity || 0) + 1
     this.userPackages.push({ id: packageData.id.toString(),packageName:packageData.name, price: packageData.price, cards_quantity: packageData.cards_quantity , emptyQuantity: packageData.cards_quantity, cards: [] });
-    const u=JSON.parse(this.user).id;
-    localStorage.setItem(u, JSON.stringify(this.userPackages));
+    if (!this.user || this.user === 'undefined' || this.user === '') return;
+    const parsedUser = JSON.parse(this.user);
+    const u = parsedUser?.id;
+    if (u) {
+      this.cookieService.set(u, JSON.stringify(this.userPackages));
+    }
   }
 
   removePackage(packageData: any) {
@@ -97,7 +110,12 @@ export class GetAllPackages {
         return pkg;
       }
     }).reverse();
-    localStorage.setItem(JSON.parse(this.user).id, JSON.stringify(this.userPackages));
+    if (!this.user || this.user === 'undefined' || this.user === '') return;
+    const parsedUser = JSON.parse(this.user);
+    const userId = parsedUser?.id;
+    if (userId) {
+      this.cookieService.set(userId, JSON.stringify(this.userPackages));
+    }
   }
 
   onEditPackage(id: any) { }

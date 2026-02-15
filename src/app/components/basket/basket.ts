@@ -9,18 +9,19 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { RouterModule } from '@angular/router';
 import { PackageService } from '../../services/package-service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-basket',
   imports: [ButtonModule, DataViewModule, TagModule, CommonModule, ToastModule, ConfirmDialogModule, RouterModule],
   standalone: true,
-  providers: [Router, PackageService],
+  providers: [PackageService],
   templateUrl: './basket.html',
   styleUrl: './basket.scss',
 })
 export class Basket {
 
-  user = localStorage.getItem('user') || '';
+  user:string = '';
   packages: any[] = [];
   allCards: any[] = [];
   uniquePackages: any[] = [];
@@ -31,14 +32,22 @@ export class Basket {
   messageService = inject(MessageService);
   router = inject(Router);
   cdr = inject(ChangeDetectorRef);
+  private cookieService = inject(CookieService);
 
   ngOnInit() {
+    this.user = this.cookieService.get('user') || '';
+    const parsedUser = this.user && this.user !== 'undefined' && this.user !== '' ? JSON.parse(this.user) : {};
+    const userId = parsedUser?.id;
+    const cookieData = userId ? this.cookieService.get(userId) || '[]' : '[]';
+    this.packages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
     this.createNewList();
-
   }
 
   createNewList() {
-    this.packages = JSON.parse(localStorage.getItem(JSON.parse(this.user).id) || '[]');
+    const parsedUser = this.user && this.user !== 'undefined' && this.user !== '' ? JSON.parse(this.user) : {};
+    const userId = parsedUser?.id;
+    const cookieData = userId ? this.cookieService.get(userId) || '[]' : '[]';
+    this.packages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
     const cards = this.packages.flatMap((item: any) => item.cards);
     const combined = cards.reduce((acc: any[], current: any) => {
       const existing = acc.find(item => Number(item.id) === Number(current.id));
@@ -55,7 +64,7 @@ export class Basket {
     this.uniquePackages = this.packages.reduce((acc: any[], current: any) => {
       const existing = acc.find(p => p.id === current.id);
       if (existing) {
-        existing.package_count += 1; 
+        existing.package_count += 1;
       } else {
         acc.push({ ...current, package_count: 1 });
       }
@@ -68,9 +77,11 @@ export class Basket {
 
   }
   removeFromBasket(id: number) {
-    let user = JSON.parse(this.user);
-    const userId = user.id;
-    let userPackages = JSON.parse(localStorage.getItem(userId) || '[]');
+    const parsedUser = this.user && this.user !== 'undefined' && this.user !== '' ? JSON.parse(this.user) : {};
+    const userId = parsedUser?.id;
+    if (!userId) return;
+    const cookieData = this.cookieService.get(userId) || '[]';
+    let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
     const packageWithCard = [...userPackages].reverse().find((pack: any) =>
       pack.cards.some((card: any) => Number(card.id) === Number(id))
     );
@@ -80,7 +91,7 @@ export class Basket {
       if (cardIndex !== -1) {
         packageWithCard.cards.splice(cardIndex, 1);
         packageWithCard.emptyQuantity += 1;
-        localStorage.setItem(userId, JSON.stringify(userPackages));
+        this.cookieService.set(userId, JSON.stringify(userPackages));
         this.createNewList();
         this.messageService.add({ severity: 'warn', summary: 'הצלחה', detail: 'המתנה הוסרה מהחבילה שלך' });
       }
@@ -107,11 +118,13 @@ export class Basket {
     }
 
     // 2. חילוץ ה-ID בבטחה
-    const userData = JSON.parse(this.user);
-    const userId = userData.id;
+    const parsedUserData = this.user && this.user !== 'undefined' && this.user !== '' ? JSON.parse(this.user) : {};
+    const userId = parsedUserData?.id;
+    if (!userId) return;
 
     // 3. טעינת החבילות של המשתמש הספציפי
-    let userPackages = JSON.parse(localStorage.getItem(userId) || '[]');
+    const cookieData = this.cookieService.get(userId) || '[]';
+    let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
 
     if (userPackages.length === 0) {
       this.confirmationService.confirm({
@@ -137,7 +150,7 @@ export class Basket {
       existingPackage.cards.push(cleanProduct);
       existingPackage.emptyQuantity -= 1;
       this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה לחבילה שלך' });
-      localStorage.setItem(userId, JSON.stringify(userPackages));
+      this.cookieService.set(userId, JSON.stringify(userPackages));
       this.createNewList();
     }
     else {

@@ -14,6 +14,7 @@ import { CategoryService } from '../../services/category-service';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { CookieService } from 'ngx-cookie-service';
 @Component({
     selector: 'app-menu', // וודאי שזה השם שבו את משתמשת
     standalone: true,    // אם את באנגולר חדש
@@ -26,7 +27,12 @@ export class Menu implements OnInit {
     readonly IMAGE_BASE_URL = 'https://localhost:7031/images/categories/';
     categoryService = inject(CategoryService);
     authService = inject(AuthenticateService);
-    user = JSON.parse(localStorage.getItem('user')!);
+    private cookieService = inject(CookieService);
+    user = (() => {
+      const userCookie = this.cookieService.get('user');
+      if (!userCookie || userCookie === 'undefined' || userCookie === '') return {};
+      return JSON.parse(userCookie);
+    })();
     showMenu = false;
     showUserDropdown = false;
     userMenuItems: MenuItem[] | undefined;

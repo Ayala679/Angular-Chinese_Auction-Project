@@ -13,6 +13,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { RouterModule } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'app-get-all-gifts',
@@ -33,7 +34,8 @@ export class GetAllGifts implements OnInit {
   dialogService = inject(DialogService);
   ref: DynamicDialogRef | null = null;
   private confirmationService = inject(ConfirmationService);
-  user: string = localStorage.getItem('user') || '';
+  private cookieService = inject(CookieService);
+  user: string = this.cookieService.get('user') || '';
   router = inject(Router);
 
   ngOnInit() {
@@ -87,11 +89,30 @@ export class GetAllGifts implements OnInit {
     }
 
     // 2. חילוץ ה-ID בבטחה
-    const userData = JSON.parse(this.user);
-    const userId = userData.id;
+    if (!this.user || this.user === 'undefined' || this.user === '') {
+      this.confirmationService.confirm({
+        header: 'נדרשת התחברות',
+        message: 'אופס, נראה שאתה לא מחובר. רוצה להתחבר או להירשם?',
+        icon: 'pi pi-user',
+        acceptLabel: "כן, אני רוצה להתחבר",
+        rejectLabel: "לא, אני רוצה להמשיך להסתכל",
+        accept: () => {
+          this.router.navigate(['/login'])
+        },
+        reject: () => {
+          this.router.navigate(['/gifts']);
+        },
+      });
+      return;
+    }
+
+    const parsedUserData = JSON.parse(this.user);
+    const userId = parsedUserData?.id;
+    if (!userId) return;
 
     // 3. טעינת החבילות של המשתמש הספציפי
-    let userPackages = JSON.parse(localStorage.getItem(userId) || '[]');
+    const cookieData = this.cookieService.get(userId) || '[]';
+    let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
 
     if (userPackages.length === 0) {
       this.confirmationService.confirm({
@@ -116,7 +137,7 @@ export class GetAllGifts implements OnInit {
       existingPackage.cards.push(product);
       existingPackage.emptyQuantity -= 1;
       this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה לחבילה שלך' });
-      localStorage.setItem(userId, JSON.stringify(userPackages));
+      this.cookieService.set(userId, JSON.stringify(userPackages));
     }
     else {
       this.confirmationService.confirm({

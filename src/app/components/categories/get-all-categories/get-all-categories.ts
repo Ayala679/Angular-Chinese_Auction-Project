@@ -8,6 +8,7 @@ import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dy
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Router, RouterModule } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 @Component({
   selector: 'app-get-all-categories',
   standalone: true,
@@ -23,8 +24,9 @@ export class GetAllCategories {
   ref: DynamicDialogRef<any> | null = null;
   categories$: any = this.categoryService.getCategories();
   readonly IMAGE_BASE_URL = 'https://localhost:7031/images/categories/';
-  user: string = localStorage.getItem('user') || '';
-  role: string = this.user ? JSON.parse(this.user).role : '';
+  private cookieService = inject(CookieService);
+  user: string = this.cookieService.get('user') || '';
+  role: string = this.user && this.user !== 'undefined' && this.user !== '' ? JSON.parse(this.user).role || '' : '';
   isChildVisible: boolean = false;
 
 
