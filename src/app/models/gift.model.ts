@@ -6,7 +6,7 @@ export class GiftDto {
     Value!: number;
     Donor_Id!: number;
     Category_Id!: number;
-    isLottery: boolean = false;
+    IsLottery: boolean = false;
     IsApproved: boolean = false;
 }
 
@@ -19,7 +19,7 @@ export class GetGiftDto {
     Value!: number;
     Donor_Id!: number;
     Category_Name!: string;
-    isLottery: boolean = false;
+    IsLottery: boolean = false;
     IsApproved: boolean = false;
     Purchase_quantity!: number;
 }

@@ -8,6 +8,9 @@
             <input pInputText id="name" formControlName="name" class="w-full" />
             <label for="name">שם מתנה</label>
         </p-floatlabel>
+        @if (giftForm.get('name')?.invalid && giftForm.get('name')?.touched) {
+            <small class="p-error">חובה להזין שם</small>
+        }
     </div>
 
     <div class="flex flex-column gap-2 mb-4">
@@ -18,10 +21,10 @@
     </div>
 
     <div class="flex flex-column gap-2 mb-4">
-
         <p-floatlabel variant="in">
-            <textarea pTextarea id="details" formControlName="details" rows="5" cols="30" style="resize: none; display: block; line-height: 1.5;"
-                class="h-full w-full pt-4" ></textarea>
+            <textarea pTextarea id="details" formControlName="details" rows="5" 
+                style="resize: none; display: block; line-height: 1.5;"
+                class="h-full w-full pt-4"></textarea>
             <label for="details">פירוט מתנה</label>
         </p-floatlabel>
     </div>
@@ -38,7 +41,7 @@
         <p-floatlabel variant="in" class="w-full">
             <p-select [options]="(categories$ | async) || []" formControlName="category_Id" optionValue="id"
                 optionLabel="name" id="cat_sel" styleClass="w-full" class="w-full" />
-            <label for="cat_sel">Select a Category</label>
+            <label for="cat_sel">בחר קטגוריה</label>
         </p-floatlabel>
     </div>
 
@@ -46,12 +49,12 @@
         <p-floatlabel variant="in" class="w-full">
             <p-select [options]="(donors$ | async) || []" formControlName="donor_Id" optionLabel="first_name"
                 optionValue="id" id="don_sel" styleClass="w-full" class="w-full" />
-            <label for="don_sel">Select a Donor</label>
+            <label for="don_sel">בחר תורם</label>
         </p-floatlabel>
     </div>
 
     <div class="flex flex-column gap-3 mb-4">
-        <label class="font-bold">תמונת מתנה</label>
+        <label class="font-bold" style="color: white;">תמונת מתנה</label>
         <p-fileUpload #f mode="basic" [auto]="true" chooseLabel="בחר תמונה" accept="image/*"
             (onSelect)="onFileSelect($event)" class="w-fit" />
 

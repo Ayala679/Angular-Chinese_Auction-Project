@@ -1,5 +1,5 @@
 import { MessageService } from 'primeng/api';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { PackageService } from '../../../services/package-service';
@@ -15,7 +15,6 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { CookieService } from 'ngx-cookie-service';
 import { TooltipModule } from 'primeng/tooltip';
 
-
 @Component({
   selector: 'app-get-all-packages',
   standalone: true,
@@ -24,15 +23,17 @@ import { TooltipModule } from 'primeng/tooltip';
   templateUrl: './get-all-packages.html',
   styleUrl: './get-all-packages.scss',
 })
-export class GetAllPackages {
+export class GetAllPackages implements OnInit {
   messageService = inject(MessageService);
   confirmationService = inject(ConfirmationService);
   dialogService = inject(DialogService);
   packageService = inject(PackageService);
   private cookieService = inject(CookieService);
+
   user: string = '';
-  role: string = '1';
+  role: string = '1'; // ברירת מחדל כמשתמש רגיל
   userPackages: any[] = [];
+
   packages$: any = this.packageService.getpackages().pipe(
     map((packages: any[]) => {
       return packages.map(pkg => {
@@ -41,40 +42,30 @@ export class GetAllPackages {
       });
     })
   );
+
   ref: DynamicDialogRef<any> | null = null;
-  isChildVisible: boolean = false;
 
-
-  // ngOnInit() {
-
-  //   this.user = this.cookieService.get('user') || '';
-  //   this.role = this.user ? JSON.parse(this.user).role : '';
-  //   this.userPackages = JSON.parse(this.cookieService.get(JSON.parse(this.user).id) || '[]');
-  // }
   ngOnInit() {
     this.user = this.cookieService.get('user') || '';
-    this.role = this.user ? JSON.parse(this.user).role : '';
     if (this.user && this.user !== 'undefined') {
       const parsedUser = JSON.parse(this.user);
-      const userId = parsedUser.id;
-      if (userId) {
-        this.userPackages = JSON.parse(this.cookieService.get(JSON.parse(this.user).id) || '[]');
-      }
-      else { this.userPackages = []; }
+      // הבטחה שה-role יישמר כמחרוזת לצורך השוואה תקינה ב-HTML
+      this.role = parsedUser.role !== undefined ? parsedUser.role.toString() : '1';
+      this.userPackages = JSON.parse(this.cookieService.get(parsedUser.id) || '[]');
     }
-    else {
-      this.role = '1';
-      this.userPackages = [];
-    }
-
   }
-
 
   showChild() {
     this.ref = this.dialogService.open(PackageForm, {
       header: 'הוספת חבילה חדשה',
       width: '30%',
-      contentStyle: { overflow: 'auto' },
+      styleClass: 'premium-dialog',
+      contentStyle: {
+        'padding': '0',
+        'background': 'transparent',
+        'border': 'none'
+      },
+      // contentStyle: { overflow: 'auto' },
       baseZIndex: 10000
     });
     this.ref?.onClose.subscribe((result) => {
@@ -102,22 +93,25 @@ export class GetAllPackages {
     });
   }
 
-
   addPackage(packageData: any) {
-    packageData.quantity = (packageData.quantity || 0) + 1
-    this.userPackages.push({ id: packageData.id.toString(), name: packageData.name, price: packageData.price, emptyQuantity: packageData.numOfCards, cards: [] });
+    packageData.quantity = (packageData.quantity || 0) + 1;
+    this.userPackages.push({
+      id: packageData.id.toString(),
+      name: packageData.name,
+      price: packageData.price,
+      emptyQuantity: packageData.cards_quantity,
+      cards: []
+    });
     const u = JSON.parse(this.user).id;
     this.cookieService.set(u, JSON.stringify(this.userPackages));
   }
+
   removePackage(packageData: any) {
-    if (packageData.quantity === 0) {
-      return
-    }
-    console.log(packageData);
+    if (packageData.quantity === 0) return;
 
     let flage = false;
     this.confirmationService.confirm({
-      message: 'מחיקת חבילה תגרוך למחיקה של כל המתנות שהוספת לחבילה זו. האם אתה בטוח שברצונך למחוק את החבילה?',
+      message: 'מחיקת חבילה תגרור למחיקה של כל המתנות שהוספת לחבילה זו. האם אתה בטוח שברצונך למחוק את החבילה?',
       header: 'מחיקת חבילה',
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: "כן, למחוק",
@@ -139,5 +133,3 @@ export class GetAllPackages {
     });
   }
 }
-
-

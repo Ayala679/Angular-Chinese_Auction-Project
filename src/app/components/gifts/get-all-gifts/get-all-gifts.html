@@ -1,65 +1,75 @@
-<p-button label="הוספת מתנה חדשה" icon="pi pi-user-plus" class="p-button-success" (onClick)="showGiftChild()" />
-<div class="grid p-4 justify-content-center">
-    @if (gifts && gifts.length > 0) { <div *ngFor="let gift of gifts" class="col-12 sm:col-6 lg:col-4 xl:col-3 p-3">
-        <div class="custom-card relative p-0 border-round-2xl overflow-hidden surface-card shadow-4">
-
-            <div class="relative overflow-hidden">
-                <img [src]="IMAGE_BASE_URL + gift.picture" [alt]="gift.name"
-                    class="gift-image w-full block transition-duration-300">
-                <div class="absolute top-0 right-0 m-3">
-                    <span class="price-tag text-white font-bold py-2 px-3 border-round-pill shadow-2">
-                        שווי המתנה: {{ gift.value | currency: 'ILS' }}
-                    </span>
-                </div>
-            </div>
-
-            <div class="p-4">
-                <div class="flex flex-column gap-2 mb-4">
-                    <h2 class="text-2xl font-bold text-900 m-0">{{ gift.name }}</h2>
-                    <h4 class="text-600 line-height-3 m-0 text-sm h-3rem overflow-hidden">
-                        {{ gift.description }}
-                    </h4>
-                    <p>{{gift.details}}</p>
-                </div>
-
-
-                <div class="flex align-items-center gap-2">
-                    <button pButton pRipple icon="pi pi-shopping-cart" label="הוספה כרטיס לחבילה"
-                        class="p-button-rounded flex-grow-1 font-bold cart-btn" (click)="addToCart(gift)">
-                    </button>
-                    <button pButton pRipple icon="pi pi-info-circle"
-                        class="p-button-rounded p-button-text p-button-secondary detail-btn">
-                    </button>
-                </div>
-            </div>
-
-        </div>
-
-    </div>}
-    @else {
-    <div class="flex flex-column align-items-center justify-content-center p-8 text-center mt-8">
-        <i class="pi pi-search-plus text-6xl text-primary mb-4 opacity-50"></i>
-        <h2 class="text-2xl font-bold text-900 m-0">אופס... לא מצאנו מתנות בקטגוריה הזו</h2>
-        <p class="text-600 mt-2 mb-4">אולי כדאי לנסות קטגוריה אחרת?</p>
-        <p-button label="חזרה לכל המתנות" icon="pi pi-arrow-right" routerLink="/gifts"></p-button>
-    </div>
-    }
-</div>
 <p-toast />
-<p-confirmdialog #cd appendTo="body">
-    <ng-template pTemplate="headless" let-message let-onAccept="onAccept" let-onReject="onReject">
-        @if (message) {
-        <div class="flex flex-column align-items-center p-8 surface-overlay border-round shadow-2 text-center">
-            <div class="border-circle bg-primary text-white inline-flex justify-content-center align-items-center h-6rem w-6rem -mt-8 shadow-4">
-                <i class="pi pi-question text-5xl"></i>
-            </div>
-            <span class="font-bold text-2xl block mb-2 mt-6">{{ message.header }}</span>
-            <p class="mb-4 text-600 px-4">{{ message.message }}</p>
-            <div class="flex align-items-center justify-content-center gap-3 mt-4">
-                <p-button [label]="message.acceptLabel" (onClick)="onAccept()" styleClass="w-15rem"></p-button>
-                <p-button [label]="message.rejectLabel"  [outlined]="true" (onClick)="onReject()" styleClass="w-15rem"></p-button>
+<div class="gifts-wrapper">
+    <div class="gifts-header">
+        <h2 class="section-title" style="color: white; font-size: 2.2rem; font-weight: 800; margin-bottom: 5px;">Exclusive Gifts ✨</h2>
+        <p class="section-subtitle" style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 15px;">Discover amazing items and win wonderful prizes</p>
+        
+        <button pButton (click)="showGiftChild()" label="Add New Gift" icon="pi pi-plus" 
+            class="add-gift-btn"></button>
+    </div>
+
+    <div class="gifts-grid">
+        @for (gift of gifts; track gift.id; let i = $index) {
+        <div class="gift-card-wrapper animate-fadein" [style.animation-delay.ms]="i * 80">
+            <div class="gift-card">
+                <div class="card-header-image">
+                    <div class="status-tags-container">
+                        <div class="orange-tag">
+                            <span>שווי: {{ gift.value | currency:'ILS':'symbol':'1.0-0' }}</span>
+                        </div>
+                        @if (gift.isLottery) {
+                        <div class="orange-tag">
+                            <i class="pi pi-lock"></i>
+                            <span>הוגרל</span>
+                        </div>
+                        }
+                    </div>
+                    <div class="image-fixed-container">
+                        <img [src]="IMAGE_BASE_URL + gift.picture" [alt]="gift.name" class="gift-img-fit">
+                    </div>
+                </div>
+
+                <div class="card-content">
+                    <h3 class="gift-name-hero">{{ gift.name }}</h3>
+                    <p class="gift-description-hero line-clamp-2">{{ gift.description }}</p>
+
+                    <div class="donor-section">
+                        <span class="donated-label">נתרם ע"י:</span>
+                        <div class="donor-info-row">
+                            <div class="donor-avatar-container">
+                                @if (gift.donor && gift.donor.is_publish && gift.donor.company_picture) {
+                                    <img [src]="'https://localhost:7031/images/companies/' + gift.donor.company_picture" class="donor-circle-img">
+                                } @else {
+                                    <div class="donor-logo-placeholder" style="background: rgba(255,255,255,0.1); border-radius: 50%; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                        <i class="pi pi-user" style="color: rgba(255,255,255,0.3); font-size: 0.9rem;"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="donor-text">
+                                @if (gift.donor && gift.donor.is_publish) {
+                                    <span class="d-name">{{ gift.donor.company_name }}</span>
+                                    <span class="d-company">{{ gift.donor.company_description }}</span>
+                                } @else {
+                                    <span class="d-name">בעילום שם</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-footer" style="padding: 0.8rem 1rem;">
+                    <button pButton label="הוספה לסל" icon="pi pi-shopping-cart" 
+                        class="p-button-rounded cta-orange-btn w-full" 
+                        [disabled]="gift.isLottery"
+                        (click)="addToCart(gift)" pRipple></button>
+                    
+                    <div class="text-center mt-1">
+                        <button pButton icon="pi pi-info-circle" class="p-button-rounded p-button-text info-icon-btn" 
+                            (click)="showDetails(gift)" pRipple></button>
+                    </div>
+                </div>
             </div>
         </div>
         }
-    </ng-template>
-</p-confirmdialog>
+    </div>
+</div>

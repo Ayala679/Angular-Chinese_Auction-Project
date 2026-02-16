@@ -91,7 +91,7 @@ export class GiftForm implements OnInit {
       value: new FormControl(null, [Validators.required, Validators.min(1)]),
       donor_Id: new FormControl(null),
       category_Id: new FormControl(null, [Validators.required]),
-      isLottery: new FormControl(false),
+      IsLottery: new FormControl(false),
       IsApproved: new FormControl(false)
     });
   }

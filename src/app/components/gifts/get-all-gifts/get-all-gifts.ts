@@ -14,6 +14,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { GiftDetailsDialog } from '../gift-details-dialog/gift-details-dialog';
 
 @Component({
   selector: 'app-get-all-gifts',
@@ -64,6 +65,8 @@ export class GetAllGifts implements OnInit {
     this.giftService.getGifts().subscribe(data => {
       this.gifts = data;
       this.cdr.detectChanges()
+      console.log('gifts', this.gifts);
+
     });
   }
 
@@ -86,10 +89,6 @@ export class GetAllGifts implements OnInit {
       return;
     }
 
-    // עדכון ה-user מהקוקי כל פעם
-    this.user = this.cookieService.get('user') || '';
-
-    // 2. חילוץ ה-ID בבטחה
     if (!this.user || this.user === 'undefined' || this.user === '') {
       this.confirmationService.confirm({
         header: 'נדרשת התחברות',
@@ -111,7 +110,6 @@ export class GetAllGifts implements OnInit {
     const userId = parsedUserData?.id;
     if (!userId) return;
 
-    // 3. טעינת החבילות של המשתמש הספציפי
     const cookieData = this.cookieService.get(userId) || '[]';
     let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
 
@@ -138,7 +136,7 @@ export class GetAllGifts implements OnInit {
       existingPackage.cards.push(product);
       existingPackage.emptyQuantity -= 1;
       this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה לחבילה שלך' });
-      this.cookieService.set(userId, JSON.stringify(userPackages), { path: '/' });
+      this.cookieService.set(userId, JSON.stringify(userPackages));
     }
     else {
       this.confirmationService.confirm({
@@ -161,11 +159,7 @@ export class GetAllGifts implements OnInit {
   }
 
 
-  // פונקציית מעבר לדף פרטים
-  showDetails(product: any) {
-    console.log('מעבר לפרטי המוצר:', product.id);
-    // כאן תוכלי להשתמש ב-Router כדי לנווט לדף המוצר
-  }
+
 
   showGiftChild() {
     this.ref = this.dialogService.open(GiftForm, {
@@ -195,6 +189,18 @@ export class GetAllGifts implements OnInit {
     console.log('gifts: ', this.gifts);
 
   }
+
+  showDetails(product: any) {
+    this.dialogService.open(GiftDetailsDialog, {
+      header: product.name,
+      width: '90vw',
+      height: 'auto',
+      contentStyle: { overflow: 'visible', padding: '0' },
+      data: { gift: product, donor: product.donor },
+      baseZIndex: 10000,
+    });
+  }
+  
 
 }
 
