@@ -1,7 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { form } from '@angular/forms/signals';
 import { CookieService } from 'ngx-cookie-service';
+import { ManagerGetDonor } from '../models/donor.model';
 
 @Injectable({
   providedIn: 'root',
@@ -63,5 +65,16 @@ export class DonorService {
     const token = this.cookieService.get('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.delete<any>(`${this.baseUrl}/${id}`, { headers, responseType: 'text' as 'json' });
+  }
+
+  getFilteredDonors(name?: string, email?: string, giftName?: string) {
+    const token = this.cookieService.get('authToken');
+    const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
+    let params = new HttpParams();
+    if (name && name.trim()) params = params.set('name', name.trim());
+    if (email && email.trim()) params = params.set('email', email.trim());
+    if (giftName && giftName.trim()) params = params.set('giftName', giftName.trim());
+    return this.http.get<ManagerGetDonor[]>(`${this.baseUrl}/filter`, { headers, params });
+
   }
 }

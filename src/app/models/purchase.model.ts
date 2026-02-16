@@ -1,10 +1,10 @@
-export class CreatePurchaseDto {
+export class CreatePurchase {
     Gift_Id!: number;
     User_Id!: number;
     Package_Id!: number;
 }
 
-export class GetPurchaseDto {
+export class GetPurchase {
     Id!: number;
     Gift_Id!: number;
     Package_Id!: number;
@@ -13,9 +13,7 @@ export class GetPurchaseDto {
     Is_Won: boolean = false;
 }
 
-export class UpdatePurchaseDto {
+export class UpdatePurchase {
     Is_Won: boolean = false;
 }
 
-// לצורך הטיפוס ב-GetUserDto
-export class Purchase extends GetPurchaseDto {}

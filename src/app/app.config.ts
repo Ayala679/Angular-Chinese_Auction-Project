@@ -16,11 +16,15 @@ export const appConfig: ApplicationConfig = {
     provideZonelessChangeDetection(),
     provideRouter(routes),
     provideAnimationsAsync(),
-        providePrimeNG({
-            theme: {
-                preset: Aura
-            }
-        }),
+    providePrimeNG({
+      theme: {
+        preset: Aura,
+        options: {
+          darkModeSelector: 'system' // או להגדיר כ-'always' דרך CSS
+        }
+      }
+
+    }),
     MessageService,
     ConfirmationService,
     DialogService,

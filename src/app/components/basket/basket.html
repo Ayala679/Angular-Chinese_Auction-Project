@@ -92,7 +92,7 @@
                 <div class="flex flex-column gap-3">
                     <div *ngFor="let pack of uniquePackages"
                         class="flex flex-column mb-2 border-bottom-1 surface-border pb-2">
-                        <span class="text-700 font-bold text-sm">{{ pack.name }}</span>
+                        <span class="text-700 font-bold text-sm">{{ pack.packageName }}</span>
                         <div class="flex justify-content-between mt-1">
                             <span class="text-600 text-xs">כמות: {{ pack.package_count }}</span>
                             <span class="text-900 font-bold text-sm">{{ (pack.price * pack.package_count) |
@@ -105,7 +105,7 @@
                         <span class="text-primary text-xl font-black">{{ totalPrice() | currency: 'ILS' }}</span>
                     </div>
 
-                    <p-button label="המשך" icon="pi pi-credit-card"
+                    <p-button label="המשך" icon="pi pi-credit-card" (click)="payment()" [disabled]="numOfCards!=sellCards"
                         styleClass="w-full p-button-raised p-button-success mt-4 py-2 font-bold">
                     </p-button>
                 </div>
@@ -124,3 +124,5 @@
         }
     </div>
 </div>
+<p-toast></p-toast>
+<p-confirmDialog></p-confirmDialog>

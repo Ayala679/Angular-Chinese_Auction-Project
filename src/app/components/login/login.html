@@ -1,31 +1,49 @@
 <p-toast />
 
-<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="card m-4 p-4">
-    <h2>Login</h2>
+<div class="login-container flex align-items-center justify-content-center min-h-screen p-3">
+    <div class="login-card">
+        <h2 class="login-title text-center text-4xl font-bold m-0 mb-5">Login</h2>
 
-    <div class="m-2">
-        <p-floatlabel variant="in">
-            <input pInputText id="email" formControlName="Email" autocomplete="off" [invalid]="isInvalid('Email')" />
-            <label for="email">Email</label>
-        </p-floatlabel>
-        @if (isInvalid('Email')) {
-        <p-message severity="error" size="small" variant="simple">
-            @if (loginForm.get('Email')?.hasError('required')) { Email is required. }
-            @if (loginForm.get('Email')?.hasError('email')) { Please enter a valid email. }
-        </p-message>
-        }
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form flex flex-column gap-4">
+
+            <div class="flex flex-column">
+                <p-floatlabel variant="in">
+                    <input pInputText id="email" formControlName="Email" autocomplete="off"
+                        [invalid]="isInvalid('Email')" class="login-input w-full" />
+                    <label for="email" class="login-label">Email</label>
+                </p-floatlabel>
+                @if (isInvalid('Email')) {
+                <p-message severity="error" size="small" variant="simple" class="mt-1">
+                    @if (loginForm.get('Email')?.hasError('required')) { Email is required. }
+                    @if (loginForm.get('Email')?.hasError('email')) { Please enter a valid email. }
+                </p-message>
+                }
+            </div>
+
+            <div class="flex flex-column">
+                <p-floatlabel variant="in">
+                    <input pInputText type="password" id="pass" formControlName="Password"
+                        [invalid]="isInvalid('Password')" class="login-input w-full" />
+                    <label for="pass" class="login-label">Password</label>
+                </p-floatlabel>
+                @if (isInvalid('Password')) {
+                <p-message severity="error" size="small" variant="simple" class="mt-1">
+                    Password must be at least 8 characters.
+                </p-message>
+                }
+            </div>
+
+            <div class="flex justify-content-start mt-1">
+                <a href="#" class="login-link text-sm">Forgot Password?</a>
+            </div>
+
+            <button pButton type="submit" label="Login" [disabled]="loginForm.invalid"
+                class="login-button w-full"></button>
+        </form>
+
+        <div class="register-section text-center mt-5 pt-4">
+            <span class="register-text">Don't have an account?</span>
+            <a href="/register" class="login-link ml-1 text-sm">Register</a>
+        </div>
     </div>
-
-
-    <div class="m-2">
-        <p-floatlabel variant="in">
-            <input pInputText type="password" id="pass" formControlName="Password" [invalid]="isInvalid('Password')" />
-            <label for="pass">Password</label>
-        </p-floatlabel>
-        @if (isInvalid('Password')) {
-        <p-message severity="error" size="small" variant="simple">Password must be at least 8 characters.</p-message>
-        }
-    </div>
-
-    <button pButton type="submit" label="Submit" [disabled]="loginForm.invalid"></button>
-</form>
+</div>

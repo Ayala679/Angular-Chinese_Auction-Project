@@ -13,6 +13,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TagModule } from 'primeng/tag';
+import { RadioButtonModule } from 'primeng/radiobutton';
 import { GiftForm } from '../../gifts/gift-form/gift-form';
 import { GiftService } from '../../../services/gift-service';
 
@@ -22,7 +23,7 @@ import { GiftService } from '../../../services/gift-service';
   imports: [
     CommonModule, FormsModule, TableModule, ButtonModule, ToastModule,
     ToolbarModule, DialogModule, ConfirmDialogModule, InputTextModule,
-    TagModule, DynamicDialogModule
+    TagModule, DynamicDialogModule, RadioButtonModule
   ],
   templateUrl: './get-all-donors.html',
   styleUrl: './get-all-donors.scss'
@@ -37,6 +38,9 @@ export class GetAllDonors implements OnInit {
 
 
   donors: any[] = [];
+  filterText: string = '';
+  filterType: string = 'name'; // 'name', 'email', or 'gift'
+  isFilterOpen: boolean = false; // Track if filter panel is visible
   donor: any = {};
   donorDialog: boolean = false; // עבור עריכה
   ref: DynamicDialogRef | null = null; // עבור הדיאלוג הדינמי שלכן
@@ -51,10 +55,83 @@ export class GetAllDonors implements OnInit {
 
   }
 
+  filteredDonorsList: any[] = [];
+
+  toggleFilterPanel() {
+    this.isFilterOpen = !this.isFilterOpen;
+  }
+
+  closeFilterPanel() {
+    this.isFilterOpen = false;
+  }
+
+  setFilterType(type: string) {
+    this.filterType = type;
+  }
+
+  onFilterChange() {
+    const q = (this.filterText || '').trim();
+    if (!q) {
+      this.filteredDonorsList = this.donors;
+      this.cdr.detectChanges();
+      return;
+    }
+    // Send query to the selected filter type parameter only
+    let name: string | undefined;
+    let email: string | undefined;
+    let giftName: string | undefined;
+
+    if (this.filterType === 'name') {
+      name = q;
+    } else if (this.filterType === 'email') {
+      email = q;
+    } else if (this.filterType === 'gift') {
+      giftName = q;
+    }
+
+    this.donorService.getFilteredDonors(name, email, giftName).subscribe({
+      next: (data) => {
+        this.filteredDonorsList = data as any[];
+        console.log('filter results:', this.filteredDonorsList);
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('filter error', err);
+        // Fallback to client-side filtering
+        this.filteredDonorsList = this.localFilter(q);
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  clearFilter() {
+    this.filterText = '';
+    this.onFilterChange();
+  }
+
+  localFilter(q: string) {
+    const lower = q.toLowerCase();
+    return this.donors.filter(d => {
+      if (this.filterType === 'name') {
+        const first = (d.first_name || '').toString().toLowerCase();
+        const last = (d.last_name || '').toString().toLowerCase();
+        return first.includes(lower) || last.includes(lower);
+      } else if (this.filterType === 'email') {
+        const email = (d.email || '').toString().toLowerCase();
+        return email.includes(lower);
+      } else if (this.filterType === 'gift') {
+        const gifts = (d.gifts || []).some((g: any) => ((g.name || '') + ' ' + (g.description || '')).toString().toLowerCase().includes(lower));
+        return gifts;
+      }
+      return false;
+    });
+  }
+
 
   loadDonors() {
     this.donorService.getDonors().subscribe(data => {
       this.donors = data;
+      this.filteredDonorsList = data;
       this.cdr.detectChanges()
       console.log(this.donors);
 
@@ -70,7 +147,7 @@ export class GetAllDonors implements OnInit {
 
   onRowExpand(event: TableRowExpandEvent) {
     this.messageService.add({ severity: 'info', summary: 'Product Expanded', detail: event.data.name, life: 3000 });
-            console.log('donor: ',this.donors);
+    console.log('donor: ', this.donors);
 
   }
 
@@ -80,6 +157,27 @@ export class GetAllDonors implements OnInit {
       summary: 'Product Collapsed',
       detail: event.data.name,
       life: 3000
+    });
+  }
+
+  customSort(event: any) {
+    event.data.sort((data1: any, data2: any) => {
+      let value1, value2
+      let result = null;
+      value1 = data1[event.field];
+      value2 = data2[event.field];
+      
+      if (typeof value1 === 'string') value1 = value1.toLowerCase();
+      if (typeof value2 === 'string') value2 = value2.toLowerCase();
+
+      if (value1 == null && value2 != null) result = -1;
+      else if (value1 != null && value2 == null) result = 1;
+      else if (value1 == null && value2 == null) result = 0;
+      else if (typeof value1 === 'string' && typeof value2 === 'string')
+        result = value1.localeCompare(value2);
+      else result = value1 < value2 ? -1 : value1 > value2 ? 1 : 0;
+
+      return event.order * result;
     });
   }
 
@@ -99,6 +197,7 @@ export class GetAllDonors implements OnInit {
         this.donorService.addDonor(result, result.company_picture).subscribe({
           next: (newDonor) => {
             this.donors = [...this.donors, newDonor];
+            this.filteredDonorsList = [...this.donors];
             this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'התורם נוסף למערכת' });
             this.cdr.detectChanges();
           },
@@ -106,7 +205,7 @@ export class GetAllDonors implements OnInit {
             this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: err.error });
           }
         });
-        
+
       }
     });
   }
@@ -123,22 +222,11 @@ export class GetAllDonors implements OnInit {
     this.ref?.onClose.subscribe((result) => {
       if (result) {
         console.log(result);
-        
+
         this.giftService.addGift(result, result.picture).subscribe({
           next: (newGift) => {
-            this.donors = this.donors.map(donor => {
-              // 2. חפשי את התורם שאליו נוספה המתנה
-              if (donor.id === result.Donor_Id) {
-                // 3. החזירי אובייקט תורם חדש עם רשימת מתנות מעודכנת
-                return {
-                  ...donor,
-                  gifts: donor.gifts ? [...donor.gifts, newGift] : [newGift]
-                };
-              }
-              return donor;
-            });
-            this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'התורם נוסף למערכת' });
-            this.cdr.detectChanges();
+            this.loadDonors(); // Reload the full list
+            this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה בהצלחה' });
           },
           error: (err) => {
             this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: err.error });
@@ -162,20 +250,8 @@ export class GetAllDonors implements OnInit {
       if (result) {
         this.giftService.updateGift(gift.id, result, result.picture).subscribe({
           next: (updatedGift) => {
-            this.donors = this.donors.map(donor => {
-              console.log(donor);
-              
-              if (donor.id === result.donor_Id) {
-                return {
-                  ...donor,
-                  gifts: donor.gifts.map((g:any) => g.id === gift.id ? updatedGift : g)
-                };
-              }
-              return donor;
-            });
-            this.donors = [...this.donors];
-            this.cdr.detectChanges();
-            this.messageService.add({ severity: 'success', summary: 'עודכן', detail: 'פרטי התורם עודכנו בהצלחה' });
+            this.loadDonors(); // Reload the full list
+            this.messageService.add({ severity: 'success', summary: 'עודכן', detail: 'המתנה עודכנה בהצלחה' });
           },
           error: (err) => {
             this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'העדכון נכשל' });
@@ -207,6 +283,7 @@ export class GetAllDonors implements OnInit {
             if (index !== -1) {
               this.donors[index] = updateDonor;
               this.donors = [...this.donors]; // גורם ל-Table של PrimeNG להתרענן
+              this.filteredDonorsList = [...this.donors];
             }
             this.cdr.detectChanges();
             this.messageService.add({ severity: 'success', summary: 'עודכן', detail: 'פרטי התורם עודכנו בהצלחה' });
@@ -238,6 +315,7 @@ export class GetAllDonors implements OnInit {
       accept: () => {
         this.donorService.deleteDonor(donor.id).subscribe(() => {
           this.donors = this.donors.filter(d => d.id !== donor.id);
+          this.filteredDonorsList = [...this.donors];
           this.messageService.add({ severity: 'success', summary: 'נמחק', detail: 'התורם הוסר' });
         });
       }

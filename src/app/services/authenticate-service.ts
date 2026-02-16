@@ -9,32 +9,34 @@ import { CookieService } from 'ngx-cookie-service';
   providedIn: 'root',
 })
 export class AuthenticateService {
-
   private baseUrl: string = 'https://localhost:7031/api/user';
-  private currentUser: any;
+
+  // שימוש ב-BehaviorSubject כפי שביקשת
   private userSubject = new BehaviorSubject<any>(null);
   user$ = this.userSubject.asObservable();
 
-
   constructor(private http: HttpClient, private cookieService: CookieService) {
-    this.currentUser = this.cookieService.get('user');
-    
-    if (this.currentUser && this.currentUser !== 'undefined' && this.currentUser !== '') {
-      this.userSubject.next(JSON.parse(this.currentUser));
+    const userCookie = this.cookieService.get('user');
+
+    if (userCookie && userCookie !== 'undefined' && userCookie !== '') {
+      try {
+        // שורה 23 המפורסמת - כאן זה יעבוד כי userSubject הוא BehaviorSubject
+        this.userSubject.next(JSON.parse(userCookie));
+      } catch (e) {
+        this.userSubject.next(null);
+      }
     } else {
       this.userSubject.next(null);
     }
   }
 
   login(email: string, password: string) {
-    const loginRequest: LoginRequest = {
-      Email: email,
-      Password: password
-    };
+    const loginRequest: LoginRequest = { Email: email, Password: password };
     return this.http.post<any>(`${this.baseUrl}/login`, loginRequest).pipe(
       tap(response => {
         this.cookieService.set('authToken', response.token);
         this.cookieService.set('user', JSON.stringify(response.user));
+        // עדכון ה-Subject
         this.userSubject.next(response.user);
       })
     );

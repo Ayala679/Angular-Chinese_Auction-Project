@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
 export class Login {
   router = inject(Router);
   messageService = inject(MessageService);
-  authService = inject(AuthenticateService); 
+  authService = inject(AuthenticateService);
   loginForm!: FormGroup;
 
   ngOnInit() {
@@ -30,27 +30,32 @@ export class Login {
     });
   }
 
-isInvalid(name: string) {
-  const control = this.loginForm.get(name);
-  return control ? control.invalid && (control.touched || control.dirty) : false;
-}
+  isInvalid(name: string) {
+    const control = this.loginForm.get(name);
+    return control ? control.invalid && (control.touched || control.dirty) : false;
+  }
 
-onSubmit() {
+  onSubmit() {
     const { Email, Password } = this.loginForm.value;
     this.authService.login(Email, Password).subscribe({
       next: (response) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User logged successfully!', life: 3000 });
         console.log('User logged:', response);
-        this.loginForm.reset(); 
+        this.loginForm.reset();
         this.router.navigate(['/']);
 
       },
       error: (err) => {
-        const errorMessage = err.error?.detail || err.error?.title || (typeof err.error === 'string' ? err.error : 'פרטי התחברות שגויים');
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage , life: 3000 });
-        console.error('Registration error:', err);
+        let errorMessage = '';
+        if (err.status === 401) {
+          errorMessage = "שם המשתמש או הסיסמה אינם נכונים"
+        }
+        else {
+          errorMessage = err.error?.detail || err.error?.title || (typeof err.error === 'string' ? err.error : 'פרטי התחברות שגויים');
+        }
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage, life: 3000 });
       }
     });
   }
- 
+
 }

@@ -1,97 +1,98 @@
-/* אנימציית פתיחה קומפקטית */
-@keyframes popIn {
-    from { 
-        opacity: 0; 
-        transform: translateY(10px) scale(0.98); 
-    }
-    to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
-    }
+/* --- 1. הגדרות רקע גלובליות (styles.scss) --- */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
-.mega-menu-popup {
-    animation: popIn 0.2s ease-out;
-    /* מונע מהתפריט לצאת מהמסך בצד ימין */
-    transform-origin: top right;
-    margin-top: 0.5rem;
+body {
+    /* התמונה על כל המסך */
+    background: url('/assets/images/back.jpg') no-repeat center center fixed;
+    background-size: cover;
 }
 
-.category-card {
-    background: rgba(255, 255, 255, 0.03);
-    
-    &:hover {
-        background: rgba(var(--primary-rgb), 0.1);
-        transform: scale(1.03);
-        
-        .cat-img { transform: scale(1.1); }
-    }
+/* --- 2. עיצוב ה-Navbar (לבן חצי שקוף) --- */
+.navbar {
+    background: rgba(255, 255, 255, 0.85) !important; 
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
+    z-index: 1000 !important; /* מעל ה-Card */
 }
 
-.image-container {
-    background: var(--surface-800); /* צבע רקע למקרה שהתמונה לא נטענת */
+/* צבעי טקסט ב-Navbar */
+.nav-links li a, .logo span.text-white {
+    color: #2c3e50 !important; /* כחול כהה */
+    font-weight: 600;
 }
 
-.cat-img {
-    transition: transform 0.4s ease;
+.logo .text-primary, .arrow, .pi-search {
+    color: #3498db !important; /* תכלת */
 }
 
-/* סיבוב החץ */
-.nav-item:hover .arrow-icon {
-    transform: rotate(180deg);
-}
-.arrow-icon {
-    transition: transform 0.3s;
-}/* אנימציית פתיחה למגה מנו */
-@keyframes megaSlideUp {
-    from { 
-        opacity: 0; 
-        transform: translateY(15px) scale(0.98); 
-    }
-    to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
-    }
+/* --- 3. תפריטים נפתחים (לבן אטום וברור) --- */
+.user-dropdown, .mega-menu {
+    background: #ffffff !important; 
+    border: 1px solid #e2e8f0 !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 12px !important;
+    position: absolute;
+    z-index: 9999 !important; /* הכי למעלה */
 }
 
-/* אנימציית כניסה לכרטיסים (אחד אחרי השני) */
-@keyframes cardPop {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
+/* פריטים בתוך הדרופדאון */
+.user-dropdown ul li {
+    color: #2c3e50 !important;
+    padding: 10px;
+    transition: 0.2s;
 }
 
-.mega-menu {
-    animation: megaSlideUp 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-    transform-origin: top right;
-    margin-top: 0.5rem;
-    min-width: 450px; /* רוחב נורמלי לשלוש תמונות */
+.user-dropdown li:hover {
+    background-color: #f0f7ff !important;
+    color: #3498db !important;
 }
 
-.menu-card {
-    animation: cardPop 0.4s ease forwards;
-    opacity: 0;
-    transition: transform 0.3s ease;
-
-    &:hover {
-        transform: translateY(-5px);
-        
-        .cat-img { transform: scale(1.15); }
-        h3 { color: var(--primary-color); }
-    }
+/* --- 4. כרטיס הכניסה/הרשמה (אפקט זכוכית חזק) --- */
+.login-card, .register-card {
+    background: rgba(255, 255, 255, 0.4) !important; 
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    position: relative;
+    z-index: 1 !important; /* מתחת לתפריטים */
 }
 
-.cat-img {
-    transition: transform 0.5s ease;
+.login-title, .register-title {
+    color: #1a2a3a !important;
+    font-weight: 800;
 }
 
-/* אנימציה לחץ של ה"קטגוריות" */
-.has-mega:hover .arrow {
-    transform: rotate(180deg);
-    color: var(--primary-color);
+/* שדות קלט לבנים וברורים */
+.login-input, .register-input {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #2c3e50 !important;
+    border: 1px solid #cbd5e1 !important;
 }
 
-.arrow {
-    font-size: 0.8rem;
-    display: inline-block;
-    transition: transform 0.3s ease;
+/* --- 5. תיבת חיפוש ב-Navbar --- */
+.search-input {
+    background: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #1e293b !important;
+    border-radius: 20px !important;
+}
+
+/* --- 6. הגדרות נוספות לדיאלוגים ולטעינה --- */
+.fixed-full-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 10000 !important;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
 }

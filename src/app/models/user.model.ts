@@ -1,4 +1,4 @@
-import { GetPurchaseDto } from './purchase.model';
+import { GetPurchase } from './purchase.model';
 
 export enum Role {
     customer = 0,
@@ -20,5 +20,5 @@ export class GetUser {
     Last_name!: string;
     Phone?: string;
     Role!: number; 
-    Purchases: GetPurchaseDto[] = [];
+    Purchases: GetPurchase[] = [];
 }

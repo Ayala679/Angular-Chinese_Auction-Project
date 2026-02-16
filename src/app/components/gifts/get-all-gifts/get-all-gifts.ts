@@ -65,11 +65,9 @@ export class GetAllGifts implements OnInit {
       this.gifts = data;
       this.cdr.detectChanges()
     });
-
   }
-  // פונקציית הוספה לסל
+
   addToCart(product: any) {
-    // 1. בדיקה אם המשתמש מחובר
     if (!this.user) {
       this.confirmationService.confirm({
         header: 'נדרשת התחברות',
@@ -87,6 +85,9 @@ export class GetAllGifts implements OnInit {
       });
       return;
     }
+
+    // עדכון ה-user מהקוקי כל פעם
+    this.user = this.cookieService.get('user') || '';
 
     // 2. חילוץ ה-ID בבטחה
     if (!this.user || this.user === 'undefined' || this.user === '') {
@@ -137,7 +138,7 @@ export class GetAllGifts implements OnInit {
       existingPackage.cards.push(product);
       existingPackage.emptyQuantity -= 1;
       this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה לחבילה שלך' });
-      this.cookieService.set(userId, JSON.stringify(userPackages));
+      this.cookieService.set(userId, JSON.stringify(userPackages), { path: '/' });
     }
     else {
       this.confirmationService.confirm({

@@ -14,7 +14,8 @@ import { Router } from '@angular/router';
   selector: 'app-register',
   standalone: true,
   imports: [ReactiveFormsModule, FloatLabelModule, InputTextModule, ButtonModule, PasswordModule, MessageModule, ToastModule, InputMaskModule],
-  templateUrl: './register.html'
+  templateUrl: './register.html',
+  styleUrl: './register.scss'
 })
 export class Register implements OnInit {
   messageService = inject(MessageService);
