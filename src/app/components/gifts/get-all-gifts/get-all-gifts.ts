@@ -75,23 +75,6 @@ export class GetAllGifts implements OnInit {
   }
 
   addToCart(product: any) {
-    if (!this.user) {
-      this.confirmationService.confirm({
-        header: 'נדרשת התחברות',
-        message: 'אופס, נראה שאתה לא מחובר. רוצה להתחבר או להירשם?',
-        icon: 'pi pi-user',
-        acceptLabel: "כן, אני רוצה להתחבר",
-        rejectLabel: "לא, אני רוצה להמשיך להסתכל",
-        accept: () => {
-          this.router.navigate(['/login'])
-        },
-        reject: () => {
-          this.router.navigate(['/gifts']);
-        },
-
-      });
-      return;
-    }
 
     if (!this.user || this.user === 'undefined' || this.user === '') {
       this.confirmationService.confirm({
@@ -116,7 +99,7 @@ export class GetAllGifts implements OnInit {
 
     const cookieData = this.cookieService.get(userId) || '[]';
     let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
-
+    
     if (userPackages.length === 0) {
       this.confirmationService.confirm({
         header: 'לא נבחרה חבילה',
@@ -136,6 +119,8 @@ export class GetAllGifts implements OnInit {
       return;
     }
     const existingPackage = userPackages.find((pack: any) => pack.emptyQuantity > 0);
+    console.log(existingPackage);
+    
     if (existingPackage) {
       existingPackage.cards.push(product);
       existingPackage.emptyQuantity -= 1;

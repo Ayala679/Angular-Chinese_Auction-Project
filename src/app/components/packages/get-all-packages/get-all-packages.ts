@@ -126,11 +126,13 @@ export class GetAllPackages implements OnInit {
       return;
     }
     packageData.quantity = (packageData.quantity || 0) + 1;
+    console.log('quatity', packageData);
+    
     this.userPackages.push({
       id: packageData.id.toString(),
       name: packageData.name,
       price: packageData.price,
-      emptyQuantity: packageData.cardsQuantity,
+      emptyQuantity: packageData.cards_quantity,
       cards: []
     });
     const u = JSON.parse(this.user).id;
