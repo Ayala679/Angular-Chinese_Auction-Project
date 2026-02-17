@@ -30,17 +30,17 @@ export class DonorService {
     const formData = new FormData();
     formData.append('email', donorData.email || '');
     formData.append('password', donorData.password || '');
-    formData.append('firstName', donorData.firstName || '');
-    formData.append('lastName', donorData.lastName || '');
+    formData.append('firstName', donorData.first_name || '');
+    formData.append('lastName', donorData.last_name || '');
     formData.append('phone', donorData.phone || '');
-    formData.append('companyName', donorData.companyName || '');
-    formData.append('companyDescription', donorData.companyDescription || '');
-    formData.append('isPublish', String(donorData.isPublish));
+    formData.append('companyName', donorData.company_name || '');
+    formData.append('companyDescription', donorData.company_description || '');
+    formData.append('isPublish', String(donorData.is_publish));
     if (imageFile) {
       formData.append('imageFile', imageFile);
     }
-    else if (donorData.companyPicture) {
-      formData.append('companyPicture', donorData.companyPicture);
+    else if (donorData.company_picture) {
+      formData.append('companyPicture', donorData.company_picture);
     }
     return this.http.post<ManagerGetDonor>(`${this.baseUrl}`, formData, { headers });
   }
@@ -51,12 +51,12 @@ export class DonorService {
     const formData = new FormData();
     if (donorData.email) formData.append('email', donorData.email);
     if (donorData.password) formData.append('password', donorData.password);
-    if (donorData.firstName) formData.append('firstName', donorData.firstName);
-    if (donorData.lastName) formData.append('lastName', donorData.lastName);
+    if (donorData.first_name) formData.append('firstName', donorData.first_name);
+    if (donorData.last_name) formData.append('lastName', donorData.last_name);
     if (donorData.phone) formData.append('phone', donorData.phone);
-    if (donorData.companyName) formData.append('companyName', donorData.companyName);
-    if (donorData.companyDescription) formData.append('companyDescription', donorData.companyDescription);
-    formData.append('isPublish', String(donorData.isPublish ?? false));
+    if (donorData.company_name) formData.append('companyName', donorData.company_name);
+    if (donorData.company_description) formData.append('companyDescription', donorData.company_description);
+    formData.append('isPublish', String(donorData.is_publish ?? false));
     if (imageFile) {
       formData.append('imageFile', imageFile);
     }

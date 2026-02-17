@@ -1,4 +1,5 @@
-<div class="card p-4" [formGroup]="packageForm">
+<div class="card p-4" [formGroup]="packageForm" dir="rtl">
+    
     <h3 class="mt-0 mb-4 text-primary">
         {{ config.data ? 'עריכת חבילה: ' + config.data.name : 'הוספת חבילה חדשה' }}
     </h3>
@@ -21,9 +22,9 @@
 
     <div class="grid">
         <div class="col-6 flex flex-column gap-2 mb-3">
-            <label for="cards_quantity" class="font-bold">כמות כרטיסים</label>
-            <p-inputNumber id="cards_quantity" formControlName="cards_quantity" [showButtons]="true" placeholder="0" styleClass="w-full" inputStyleClass="w-full" />
-            @if (packageForm.get('cards_quantity')?.invalid && packageForm.get('cards_quantity')?.touched) {
+            <label for="cardsQuantity" class="font-bold">כמות כרטיסים</label>
+            <p-inputNumber id="cardsQuantity" formControlName="cardsQuantity" [showButtons]="true" placeholder="0" styleClass="w-full" inputStyleClass="w-full" />
+            @if (packageForm.get('cardsQuantity')?.invalid && packageForm.get('cardsQuantity')?.touched) {
                 <small class="p-error">נא להזין כמות</small>
             }
         </div>

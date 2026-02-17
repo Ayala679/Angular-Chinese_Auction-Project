@@ -1,7 +1,26 @@
-@import "primeflex/primeflex.css";
-
 :root {
     background: url('/images/back.jpg') no-repeat center center fixed;
     background-size: cover;
-    color-scheme: dark;
+    position: relative;
+    min-height: 100vh;
+}
+
+::ng-deep {
+    .p-dialog.premium-dialog {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+
+        .p-dialog-content {
+            border: none !important;
+            outline: none !important;
+            /* הוספת הרקע הכהה גם כאן ליתר ביטחון */
+            background-color: #1a162e !important;
+        }
+    }
+
+    /* ביטול המסגרת שהדפדפן שם על אלמנטים פעילים */
+    *:focus {
+        outline: none !important;
+    }
 }

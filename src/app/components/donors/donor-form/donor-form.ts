@@ -36,14 +36,14 @@ export class DonorForm implements OnInit {
   config = inject(DynamicDialogConfig);
   donorForm!: FormGroup<{
     email: any;
-    firstName: any;
-    lastName: any;
+    first_name: any;
+    last_name: any;
     phone: any;
     password: any;
-    isPublish: any;
-    companyName: any;
-    companyDescription: any;
-    companyPicture: any;
+    is_publish: any;
+    company_name: any;
+    company_description: any;
+    company_picture: any;
   }>;
   previewImage: string | null = null;
   checked: boolean = false;
@@ -58,15 +58,15 @@ export class DonorForm implements OnInit {
     if (this.config.data) {
       this.donorForm.patchValue({
         email: this.config.data.email,
-        firstName: this.config.data.firstName,
-        lastName: this.config.data.lastName,
+        first_name: this.config.data.first_name,
+        last_name: this.config.data.last_name,
         phone: this.config.data.phone,
-        companyName: this.config.data.companyName,
-        companyDescription: this.config.data.companyDescription,
-        isPublish: !!this.config.data.isPublish,
+        company_name: this.config.data.company_name,
+        company_description: this.config.data.company_description,
+        is_publish: !!this.config.data.is_publish,
       });
-      if (this.config.data.companyPicture) {
-        this.previewImage = this.BASE_IMG_URL + this.config.data.companyPicture;
+      if (this.config.data.company_picture) {
+        this.previewImage = this.BASE_IMG_URL + this.config.data.company_picture;
       }
     }
   }
@@ -74,21 +74,21 @@ export class DonorForm implements OnInit {
   private initForm() {
     this.donorForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      first_name: ['', [Validators.required, Validators.minLength(2)]],
+      last_name: ['', [Validators.required, Validators.minLength(2)]],
       phone: ['', [Validators.pattern('^\\+?[0-9]\\d{1,14}$')]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      isPublish: [false],
-      companyName: [''],
-      companyDescription: [''],
-      companyPicture: [null]
+      is_publish: [false],
+      company_name: [''],
+      company_description: [''],
+      company_picture: [null]
     });
   }
 
   onFileSelect(event: any) {
     const file = event.files[0];
     if (file) {
-      this.donorForm.patchValue({ companyPicture: file });
+      this.donorForm.patchValue({ company_picture: file });
       const reader = new FileReader();
       reader.onload = (e: any) => this.previewImage = e.target.result;
       reader.readAsDataURL(file);
@@ -99,14 +99,14 @@ export class DonorForm implements OnInit {
     if (fileUpload) {
       fileUpload.clear();
     }
-    this.donorForm.get('companyPicture')?.setValue(null);
+    this.donorForm.get('company_picture')?.setValue(null);
     this.previewImage = null;
   }
 
   save() {
     if (this.donorForm.valid) {
       const formValue = this.donorForm.value as CreateDonor;
-      this.ref.close({ ...formValue, companyPicture: this.selectedFile || formValue.companyPicture });
+      this.ref.close({ ...formValue, company_picture: this.selectedFile || formValue.company_picture });
     } else {
       this.messageService.add({
         severity: 'error',

@@ -9,7 +9,7 @@ import { DialogService, DynamicDialogModule, DynamicDialogRef } from 'primeng/dy
 import { ToastModule } from 'primeng/toast';
 import { CommonModule } from '@angular/common';
 import { map } from 'rxjs';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { CookieService } from 'ngx-cookie-service';
@@ -29,10 +29,10 @@ export class GetAllPackages implements OnInit {
   dialogService = inject(DialogService);
   packageService = inject(PackageService);
   private cookieService = inject(CookieService);
-
   user: string = '';
   role: string = '1'; // ברירת מחדל כמשתמש רגיל
   userPackages: any[] = [];
+  router = inject(Router);
 
   packages$: any = this.packageService.getpackages().pipe(
     map((packages: any[]) => {
@@ -57,15 +57,27 @@ export class GetAllPackages implements OnInit {
 
   showChild() {
     this.ref = this.dialogService.open(PackageForm, {
-      header: 'הוספת חבילה חדשה',
       width: '30%',
       styleClass: 'premium-dialog',
-      contentStyle: {
-        'padding': '0',
-        'background': 'transparent',
-        'border': 'none'
+      showHeader: false,
+      style: {
+        'max-width': '95vw',
+        'background': '#1a162e',
+        'border': 'none',
+        'box-shadow': 'none',
+        'outline': 'none',
+        'border-radius': '0'
       },
-      // contentStyle: { overflow: 'auto' },
+      contentStyle: {
+        'max-height': '90vh',
+        'overflow-y': 'auto',
+        'padding': '0',
+        'background': '#1a162e',
+        'border': 'none',
+        'box-shadow': 'none',
+        'outline': 'none',
+        'border-radius': '0'
+      },
       baseZIndex: 10000
     });
     this.ref?.onClose.subscribe((result) => {
@@ -94,6 +106,25 @@ export class GetAllPackages implements OnInit {
   }
 
   addPackage(packageData: any) {
+    console.log('user', this.user, (!this.user));
+
+    if (!this.user) {
+      this.confirmationService.confirm({
+        header: 'נדרשת התחברות',
+        message: 'אופס, נראה שאתה לא מחובר. רוצה להתחבר או להירשם?',
+        icon: 'pi pi-user',
+        acceptLabel: "כן, אני רוצה להתחבר",
+        rejectLabel: "לא, אני רוצה להמשיך להסתכל",
+        accept: () => {
+          this.router.navigate(['/login'])
+        },
+        reject: () => {
+          this.router.navigate(['/home']);
+        },
+
+      });
+      return;
+    }
     packageData.quantity = (packageData.quantity || 0) + 1;
     this.userPackages.push({
       id: packageData.id.toString(),
@@ -107,7 +138,8 @@ export class GetAllPackages implements OnInit {
   }
 
   removePackage(packageData: any) {
-    if (packageData.quantity === 0) return;
+    if (packageData.quantity === 0)
+      return;
 
     let flage = false;
     this.confirmationService.confirm({
@@ -116,8 +148,8 @@ export class GetAllPackages implements OnInit {
       icon: 'pi pi-exclamation-triangle',
       acceptLabel: "כן, למחוק",
       rejectLabel: "אה לא! אני רוצה להשאיר את החבילה",
-      acceptButtonStyleClass: 'p-button-success',
-      rejectButtonStyleClass: 'p-button-text',
+      acceptButtonStyleClass: 'p-button-rounded p-button-raised premium-accept-btn',
+      rejectButtonStyleClass: 'p-button-rounded p-button-text premium-reject-btn',
       accept: () => {
         this.userPackages = this.userPackages.reverse().filter((pkg: any) => {
           if (pkg.id === packageData.id.toString() && !flage) {

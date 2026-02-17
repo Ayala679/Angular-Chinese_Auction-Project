@@ -1,70 +1,83 @@
-<p-toast />
-<div class="gifts-wrapper">
-    <div class="gifts-header">
-        <h2 class="section-title" style="color: white; font-size: 2.2rem; font-weight: 800; margin-bottom: 5px;">Exclusive Gifts ✨</h2>
-        <p class="section-subtitle" style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 15px;">Discover amazing items and win wonderful prizes</p>
+<p-toast></p-toast>
+
+<div class="gifts-wrapper p-flex p-flex-column w-full min-h-screen relative overflow-x-hidden">
+    
+    <div class="gifts-header text-center p-px-3">
+        <h2 class="gift-page-title text-white font-bold m-0 mb-1">Exclusive Gifts ✨</h2>
+        <p class="section-subtitle mb-4" style="color: rgba(255,255,255,0.7); font-size: 0.9rem;">
+            Discover amazing items and win wonderful prizes
+        </p>
+        
         @if (role=='0') {
-        <button pButton (click)="showGiftChild()" label="Add New Gift" icon="pi pi-plus" 
-            class="add-gift-btn"></button>}
+            <button pButton (click)="showGiftChild()" label="Add New Gift" icon="pi pi-plus" 
+                class="add-gift-btn p-button-rounded font-semibold"></button>
+        }
     </div>
 
     <div class="gifts-grid">
         @for (gift of gifts; track gift.id; let i = $index) {
-        <div class="gift-card-wrapper animate-fadein" [style.animation-delay.ms]="i * 80">
-            <div class="gift-card">
-                <div class="card-header-image">
-                    <div class="status-tags-container">
-                        <div class="orange-tag">
+        <div class="animate-fadein" [style.animation-delay.ms]="i * 80">
+            <div class="gift-card flex flex-column h-full overflow-hidden relative">
+                
+                <div class="card-header-image relative" style="height: 150px; background: #000;">
+                    <div class="status-tags-container absolute top-0 left-0 w-full p-2 flex justify-content-between z-5">
+                        <div class="orange-tag text-white font-bold p-1 px-2 border-round">
                             <span>שווי: {{ gift.value | currency:'ILS':'symbol':'1.0-0' }}</span>
                         </div>
                         @if (gift.isLottery) {
-                        <div class="orange-tag">
-                            <i class="pi pi-lock"></i>
+                        <div class="orange-tag text-white font-bold p-1 px-2 border-round flex align-items-center gap-1">
+                            <i class="pi pi-lock" style="font-size: 0.7rem;"></i>
                             <span>הוגרל</span>
                         </div>
                         }
                     </div>
-                    <div class="image-fixed-container">
-                        <img [src]="IMAGE_BASE_URL + gift.picture" [alt]="gift.name" class="gift-img-fit">
+                    <div class="w-full h-full">
+                        <img [src]="IMAGE_BASE_URL + gift.picture" [alt]="gift.name" class="w-full h-full object-cover">
                     </div>
                 </div>
 
-                <div class="card-content">
-                    <h3 class="gift-name-hero">{{ gift.name }}</h3>
-                    <p class="gift-description-hero line-clamp-2">{{ gift.description }}</p>
+                <div class="card-content p-3 text-center flex-grow-1 flex flex-column gap-2">
+                    <h3 class="text-white font-bold m-0" style="font-size: 1.15rem;">{{ gift.name }}</h3>
+                    <p class="line-clamp-2 m-0" style="color: #94a3b8; font-size: 0.8rem; line-height: 1.3;">
+                        {{ gift.description }}
+                    </p>
 
-                    <div class="donor-section">
-                        <span class="donated-label">נתרם ע"י:</span>
-                        <div class="donor-info-row">
-                            <div class="donor-avatar-container">
-                                @if (gift.donor && gift.donor.isPublish && gift.donor.companyPicture) {
-                                    <img [src]="'https://localhost:7031/images/companies/' + gift.donor.companyPicture" class="donor-circle-img">
+                    <div class="mt-auto pt-2" style="border-top: 1px solid rgba(255,255,255,0.05);">
+                        <span class="block font-bold mb-1" style="font-size: 0.7rem; color: #f97316;">נתרם ע"י:</span>
+                        <div class="flex align-items-center justify-content-center gap-2">
+                            <div style="width: 32px; height: 32px;">
+                                @if (gift.donor && gift.donor.is_publish) {
+                                    <img [src]="'https://localhost:7031/images/companies/' + gift.donor.company_picture" 
+                                         class="border-circle border-1" style="border-color: #f97316; width: 100%; height: 100%; object-fit: cover;">
                                 } @else {
-                                    <div class="donor-logo-placeholder" style="background: rgba(255,255,255,0.1); border-radius: 50%; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                                    <div class="flex align-items-center justify-content-center border-circle w-full h-full" 
+                                         style="background: rgba(255,255,255,0.1);">
                                         <i class="pi pi-user" style="color: rgba(255,255,255,0.3); font-size: 0.9rem;"></i>
                                     </div>
                                 }
                             </div>
-                            <div class="donor-text">
-                                @if (gift.donor && gift.donor.isPublish) {
-                                    <span class="d-name">{{ gift.donor.companyName }}</span>
-                                    <span class="d-company">{{ gift.donor.companyDescription }}</span>
+                            <div class="flex flex-column text-right">
+                                @if (gift.donor && gift.donor.is_publish) {
+                                    <span class="text-white font-semibold" style="font-size: 0.8rem;">{{ gift.donor.company_name }}</span>
+                                    <span style="color: #64748b; font-size: 0.65rem;">{{ gift.donor.company_description }}</span>
                                 } @else {
-                                    <span class="d-name">בעילום שם</span>
+                                    <span class="text-white font-semibold" style="font-size: 0.8rem;">בעילום שם</span>
                                 }
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card-footer" style="padding: 0.8rem 1rem;">
+                <div class="p-3 pt-0">
                     <button pButton label="הוספה לסל" icon="pi pi-shopping-cart" 
-                        class="p-button-rounded cta-orange-btn w-full" 
+                        class="p-button-rounded cta-orange-btn w-full font-bold" 
+                        style="height: 2.5rem; font-size: 0.85rem;"
                         [disabled]="gift.isLottery"
                         (click)="addToCart(gift)" pRipple></button>
                     
                     <div class="text-center mt-1">
-                        <button pButton icon="pi pi-info-circle" class="p-button-rounded p-button-text info-icon-btn" 
+                        <button pButton icon="pi pi-info-circle" class="p-button-rounded p-button-text p-button-secondary" 
+                            style="font-size: 0.8rem;"
                             (click)="showDetails(gift)" pRipple></button>
                     </div>
                 </div>
@@ -73,3 +86,4 @@
         }
     </div>
 </div>
+<p-confirmDialog styleClass="premium-dialog"></p-confirmDialog>

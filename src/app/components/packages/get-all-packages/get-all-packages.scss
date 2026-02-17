@@ -884,7 +884,6 @@
 .cta-button {
   background: var(--secondary-gradient) !important;
   border: none !important;
-  padding: 1rem 2.5rem !important;
   font-size: 1.05rem !important;
   font-weight: 600;
   color: #ffffff !important;
@@ -1288,56 +1287,5 @@
   }
 }
 
-/* שימוש ב-!important על הסלקטורים הגלובליים של PrimeNG */
 
-:host ::ng-deep {
-    /* הפיכת כל מעטפת הדיאלוג לשקופה */
-    .p-dialog.premium-dialog {
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
 
-        .p-dialog-header {
-            display: none !important;
-        }
-
-        .p-dialog-content {
-            background: transparent !important;
-            padding: 0 !important;
-            border: none !important;
-            overflow: visible !important; /* מונע סקרול מיותר */
-        }
-    }
-
-    /* תיקון צבע תיבות הטקסט - סלקטור ספציפי יותר */
-    .p-inputtext, 
-    .p-inputnumber-input, 
-    textarea.p-inputtextarea {
-        background: rgba(102, 126, 234, 0.15) !important;
-        color: #ffffff !important;
-        border: 2px solid rgba(102, 126, 234, 0.3) !important;
-        box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2) !important;
-
-        &:focus {
-            background: rgba(102, 126, 234, 0.25) !important;
-            border-color: #667eea !important;
-            box-shadow: 0 0 15px rgba(102, 126, 234, 0.4) !important;
-        }
-    }
-
-    /* תיקון ספציפי ל-InputNumber כי הוא מורכב מכמה אלמנטים */
-    .p-inputnumber {
-        background: transparent !important;
-        input {
-            background: rgba(102, 126, 234, 0.15) !important;
-        }
-    }
-}
-
-/* הבטחת המראה של הכרטיס הכחול הכהה */
-.card {
-    background: linear-gradient(135deg, rgba(10, 10, 25, 0.98) 0%, rgba(20, 20, 45, 0.95) 100%) !important;
-    border: 1px solid rgba(102, 126, 234, 0.3) !important;
-    box-shadow: 0 20px 50px rgba(0,0,0,0.5) !important;
-    margin: 0 !important; /* מבטל רווחים בין הכרטיס לקצה הדיאלוג */
-}

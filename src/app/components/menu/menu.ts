@@ -71,8 +71,9 @@ export class Menu implements OnInit {
             this.showUserDropdown = false;
         }
         console.log('Logging out...');
-        this.isLoggedIn = false;
         this.authService.logout();
+        this.isLoggedIn = false;
+        window.location.reload();
     }
 
     @HostListener('document:click', ['$event'])
@@ -150,7 +151,7 @@ export class Menu implements OnInit {
 
                     setTimeout(() => {
                         this.displayLotteryResults = true;
-                        this.cdr.detectChanges(); 
+                        this.cdr.detectChanges();
                     }, 200);
                 });
             },

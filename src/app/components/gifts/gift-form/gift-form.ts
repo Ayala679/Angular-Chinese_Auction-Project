@@ -64,6 +64,8 @@ export class GiftForm implements OnInit {
   previewImage: string | null = null;
   checked: boolean = false;
   readonly BASE_IMG_URL = 'https://localhost:7031/images/gifts/';
+  readonly CATEGORY_BASE_URL = 'https://localhost:7031/images/categories/';
+  readonly DONOR_BASE_URL = 'https://localhost:7031/images/companies/';
   categories$: Observable<GetCategory[]>;
   donors$: Observable<ManagerGetDonor[]>;
   categoryService = inject(CategoryService);
@@ -99,8 +101,7 @@ export class GiftForm implements OnInit {
         donorId: this.config.data.donorId,
         categoryId: this.config.data.categoryId,
         isLottery: this.config.data.isLottery || false
-      });
-
+      });      
       if (this.config.data.picture) {
         this.previewImage = this.BASE_IMG_URL + this.config.data.picture;
       }

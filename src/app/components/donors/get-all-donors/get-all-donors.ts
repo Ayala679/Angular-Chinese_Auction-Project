@@ -109,8 +109,8 @@ export class GetAllDonors implements OnInit {
     const lower = q.toLowerCase();
     return this.donors.filter(d => {
       if (this.filterType === 'name') {
-        const first = (d.firstName || '').toString().toLowerCase();
-        const last = (d.lastName || '').toString().toLowerCase();
+        const first = (d.first_name || '').toString().toLowerCase();
+        const last = (d.last_name || '').toString().toLowerCase();
         return first.includes(lower) || last.includes(lower);
       } else if (this.filterType === 'email') {
         const email = (d.email || '').toString().toLowerCase();
@@ -191,12 +191,12 @@ export class GetAllDonors implements OnInit {
         const createDonorDto: CreateDonor = {
           email: result.email,
           password: result.password,
-          firstName: result.firstName,
-          lastName: result.lastName,
+          first_name: result.firstName,
+          last_name: result.lastName,
           phone: result.phone,
-          companyName: result.companyName,
-          companyDescription: result.companyDescription,
-          isPublish: result.isPublish
+          company_name: result.companyName,
+          company_description: result.companyDescription,
+          is_publish: result.isPublish
         };
 
         this.donorService.addDonor(createDonorDto, result.companyPicture).subscribe({
@@ -283,12 +283,12 @@ export class GetAllDonors implements OnInit {
         const updateDonorDto: Partial<CreateDonor> = {
           email: result.email,
           password: result.password,
-          firstName: result.firstName,
-          lastName: result.lastName,
+          first_name: result.firstName,
+          last_name: result.lastName,
           phone: result.phone,
-          companyName: result.companyName,
-          companyDescription: result.companyDescription,
-          isPublish: result.isPublish
+          company_name: result.companyName,
+          company_description: result.companyDescription,
+          is_publish: result.isPublish
         };
 
         this.donorService.updateDonor(donor.id!, updateDonorDto, result.companyPicture).subscribe({
@@ -316,8 +316,8 @@ export class GetAllDonors implements OnInit {
     
     const updateDonorDto: Partial<CreateDonor> = {
       email: (this.donor as any).email,
-      firstName: (this.donor as any).firstName,
-      lastName: (this.donor as any).lastName,
+      first_name: (this.donor as any).firstName,
+      last_name: (this.donor as any).lastName,
       phone: (this.donor as any).phone
     };
 
@@ -336,7 +336,7 @@ export class GetAllDonors implements OnInit {
 
   deleteDonor(donor: ManagerGetDonor) {
     this.confirmationService.confirm({
-      message: `האם למחוק את ${donor.firstName}?`,
+      message: `האם למחוק את ${donor.first_name}?`,
       header: 'אישור מחיקה',
       accept: () => {
         this.donorService.deleteDonor(donor.id!).subscribe({

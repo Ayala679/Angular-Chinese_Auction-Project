@@ -167,9 +167,15 @@ export class GetAllGifts implements OnInit {
 
   showGiftChild() {
     this.ref = this.dialogService.open(GiftForm, {
-      header: 'הוספת מתנה חדשה',
-      width: '40%',
-      contentStyle: { overflow: 'auto' },
+      width: '450px',
+      showHeader: false,
+      styleClass: 'premium-dialog',
+      contentStyle: {
+        'max-height': '90vh',
+        'overflow-y': 'auto',
+        'padding': '0',
+        'background': '#1a162e',
+      },
       baseZIndex: 10000,
     });
     this.ref?.onClose.subscribe((result) => {
@@ -195,11 +201,25 @@ export class GetAllGifts implements OnInit {
   }
 
   showDetails(product: any) {
+    console.log(product.donor);
+    
     this.dialogService.open(GiftDetailsDialog, {
-      header: product.name,
-      width: '90vw',
+      showHeader: false,
+      width: '900px',
       height: 'auto',
-      contentStyle: { overflow: 'visible', padding: '0' },
+      style: {
+        'max-width': '95vw', 'background': '#1a162e', 'border': 'none', borderRadius: '10px', 'border-radius': '0'
+      },
+      contentStyle: {
+        'max-height': '90vh',
+        'overflow-y': 'auto',
+        'padding': '0',
+        'background': '#1a162e',
+        'border': 'none',
+        'outline': 'none',
+        'border-radius': '0'
+      },
+      styleClass: 'premium-dialog',
       data: { gift: product, donor: product.donor },
       baseZIndex: 10000,
     });
