@@ -99,7 +99,7 @@ export class GetAllPackages implements OnInit {
       id: packageData.id.toString(),
       name: packageData.name,
       price: packageData.price,
-      emptyQuantity: packageData.cards_quantity,
+      emptyQuantity: packageData.cardsQuantity,
       cards: []
     });
     const u = JSON.parse(this.user).id;

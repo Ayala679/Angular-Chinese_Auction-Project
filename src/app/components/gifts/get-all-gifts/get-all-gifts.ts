@@ -37,8 +37,8 @@ export class GetAllGifts implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private cookieService = inject(CookieService);
   user: string = this.cookieService.get('user') || '';
+  role: string = '1';
   router = inject(Router);
-
   ngOnInit() {
     this.route.params.subscribe(params => {
       const categoryId = params['categoryId'];
@@ -49,6 +49,10 @@ export class GetAllGifts implements OnInit {
       }
 
     });
+    if (this.user && this.user !== 'undefined') {
+      const parsedUser = JSON.parse(this.user);
+      this.role = parsedUser.role !== undefined ? parsedUser.role.toString() : '1';
+    }
   }
 
   loadGiftsByCategory(categoryId: number) {
@@ -200,7 +204,7 @@ export class GetAllGifts implements OnInit {
       baseZIndex: 10000,
     });
   }
-  
+
 
 }
 

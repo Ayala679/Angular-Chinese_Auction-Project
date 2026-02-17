@@ -37,22 +37,22 @@
                                 [rounded]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
                         </td>
                         <td>
-                            @if(d.company_picture && d.company_picture !== 'string' && d.company_picture !== 'undefined' &&
-                            d.company_picture !== 'null'){
-                            <img [src]="IMAGE_BASE_URL + d.company_picture" style="width: 50px" class="shadow-2 rounded" />
+                            @if(d.companyPicture && d.companyPicture !== 'string' && d.companyPicture !== 'undefined' &&
+                            d.companyPicture !== 'null'){
+                            <img [src]="IMAGE_BASE_URL + d.companyPicture" style="width: 50px" class="shadow-2 rounded" />
                             }
                             @else{
                             <p-tag severity="secondary" value="אין לוגו"></p-tag>}
                         </td>
                         <td>{{ d.email }}</td>
-                        <td>{{ d.first_name }}</td>
-                        <td>{{ d.last_name }}</td>
+                        <td>{{ d.firstName }}</td>
+                        <td>{{ d.lastName }}</td>
                         <td>{{ d.phone }}</td>
-                        <td>{{ d.company_name }}</td>
-                        <td>{{ d.company_description }}</td>
+                        <td>{{ d.companyName }}</td>
+                        <td>{{ d.companyDescription }}</td>
                         <td>
-                            <p-tag [severity]="d.is_publish ? 'success' : 'warn'"
-                                [value]="d.is_publish ? 'מפרסם' : 'לא מפרסם'" />
+                            <p-tag [severity]="d.isPublish ? 'success' : 'warn'"
+                                [value]="d.isPublish ? 'מפרסם' : 'לא מפרסם'" />
                         </td>
                         <td>
                             <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" class="mr-2"
@@ -66,7 +66,7 @@
                     <tr>
                         <td colspan="12">
                             <div class="p-4">
-                                <h4> Gifts donated by {{ donor.first_name }}</h4>
+                                <h4> Gifts donated by {{ donor.firstName }}</h4>
                                 <p-button label="הוספת מתנה חדשה" icon="pi pi-user-plus" class="p-button-success"
                                     (onClick)="showGiftChild(donor)" />
                                 <p-table [value]="donor.gifts" dataKey="id">
@@ -90,10 +90,10 @@
                                     <p-sortIcon field="details" />
                                 </div>
                             </th>
-                            <th pSortableColumn="purchase_quantity">
+                            <th pSortableColumn="purchaseQuantity">
                                 <div class="flex items-center gap-2">
                                     Purchase Quantity
-                                    <p-sortIcon field="purchase_quantity" />
+                                    <p-sortIcon field="purchaseQuantity" />
                                 </div>
                             </th>
                             <th pSortableColumn="value">
@@ -117,7 +117,7 @@
                             <td>{{ gift.name }}</td>
                             <td>{{ gift.description }}</td>
                             <td>{{ gift.details }}</td>
-                            <td>{{ gift.purchase_quantity}}</td>
+                            <td>{{ gift.purchaseQuantity}}</td>
                             <td>{{ gift.value | currency: 'ILS' }}</td>
                             <td>
                                 @if(gift.picture && gift.picture !== 'string' && gift.picture !== 'undefined' &&

@@ -1,34 +1,28 @@
 export class GiftDto {
-    Name!: string;
-    Description!: string;
-    Details?: string;
+    name!: string;
+    description!: string;
+    details?: string;
     picture!: string;
-    Value!: number;
-    Donor_Id!: number;
-    Category_Id!: number;
-    IsLottery: boolean = false;
-    IsApproved: boolean = false;
+    value!: number;
+    donorId!: number;
+    categoryId!: number;
+    isLottery: boolean = false;
 }
 
 export class GetGiftDto {
-    Id!: number;
-    Name!: string;
-    Description!: string;
-    Details?: string;
+    id!: number;
+    name!: string;
+    description!: string;
+    details?: string;
     picture!: string;
-    Value!: number;
-    Donor_Id!: number;
-    Category_Name!: string;
-    IsLottery: boolean = false;
-    IsApproved: boolean = false;
-    Purchase_quantity!: number;
+    value!: number;
+    donor_Id!: number;
+    category_Id!: string;
+    isLottery: boolean = false;
+    purchaseQuantity!: number;
 }
 
 export class UpdateGiftDto {
-    Purchase_quantity!: number;
+    purchaseQuantity!: number;
 }
 
-export class ApproveGiftDto {
-    Id!: number;
-    IsApproved: boolean = false;
-}

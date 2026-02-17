@@ -1,20 +1,20 @@
 <div class="card p-4" [formGroup]="donorForm">
     <h3 class="mt-0 mb-4 text-primary">
-        {{ config.data ? 'עריכת קטגוריה: ' + config.data.first_name : 'הוספת קטגוריה חדשה' }}
+        {{ config.data ? 'עריכת קטגוריה: ' + config.data.firstName : 'הוספת קטגוריה חדשה' }}
     </h3>
 
 
     <div class="flex flex-column gap-2 mb-4">
         <label for="first_name" class="font-bold">שם פרטי</label>
-        <input pInputText id="first_name" formControlName="first_name" placeholder="הכנס שם..." class="w-full" />
-        @if (donorForm.get('first_name')?.invalid && donorForm.get('first_name')?.touched) {
+        <input pInputText id="first_name" formControlName="firstName" placeholder="הכנס שם..." class="w-full" />
+        @if (donorForm.get('firstName')?.invalid && donorForm.get('firstName')?.touched) {
         <small class="p-error">חובה להזין שם לקטגוריה</small>
         }
     </div>
     <div class="flex flex-column gap-2 mb-4">
         <label for="last_name" class="font-bold">שם משפחה</label>
-        <input pInputText id="last_name" formControlName="last_name" placeholder="הכנס שם משפחה..." class="w-full" />
-        @if (donorForm.get('last_name')?.invalid && donorForm.get('last_name')?.touched) {
+        <input pInputText id="last_name" formControlName="lastName" placeholder="הכנס שם משפחה..." class="w-full" />
+        @if (donorForm.get('lastName')?.invalid && donorForm.get('lastName')?.touched) {
         <small class="p-error">חובה להזין שם משפחה</small>
         }
     </div>
@@ -40,18 +40,18 @@
     </div>
     <div class="card flex justify-center gap-4">
         <label for="is_publish" class="cursor-pointer">פרסם את שם התורם</label>
-        <p-checkbox id="is_publish" formControlName="is_publish" [binary]="true" />
+        <p-checkbox id="is_publish" formControlName="isPublish" [binary]="true" />
     </div>
-    @if(donorForm.get('is_publish')?.value) {
+    @if(donorForm.get('isPublish')?.value) {
     <div>
         <div class="flex flex-column gap-2 mb-4">
             <label for="company_name" class="font-bold">שם החברה</label>
-            <input pInputText id="company_name" formControlName="company_name" placeholder="הכנס שם חברה..."
+            <input pInputText id="company_name" formControlName="companyName" placeholder="הכנס שם חברה..."
                 class="w-full" />
         </div>
         <div class="flex flex-column gap-2 mb-4">
             <label for="company_description" class="font-bold">תיאור החברה</label>
-            <textarea pInputTextarea id="company_description" formControlName="company_description" rows="3"
+            <textarea pInputTextarea id="company_description" formControlName="companyDescription" rows="3"
                 placeholder="הכנס תיאור חברה..." class="w-full"></textarea>
         </div>
         <div class="flex flex-column gap-3 mb-4">

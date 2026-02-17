@@ -124,7 +124,7 @@ export class Menu implements OnInit {
                         map((res: any) => ({
                             name: gift.name,
                             status: 'הושלם',
-                            winner: res?.first_name || res?.firstName || 'נבחר זוכה',
+                            winner: res?.firstName || 'נבחר זוכה',
                             message: 'הגרלה הושלמה',
                             severity: 'text-green-500',
                             icon: 'pi pi-check-circle'

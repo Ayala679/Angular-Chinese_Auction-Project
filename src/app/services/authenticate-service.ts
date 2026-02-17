@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { LoginRequest } from '../models/authenticate.model';
-import { CreateUser } from '../models/user.model';
+import { LoginRequest, LoginResponse } from '../models/authenticate.model';
+import { CreateUser, GetUser } from '../models/user.model';
 import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -11,8 +11,8 @@ import { CookieService } from 'ngx-cookie-service';
 export class AuthenticateService {
   private baseUrl: string = 'https://localhost:7031/api/user';
 
-  // שימוש ב-BehaviorSubject כפי שביקשת
-  private userSubject = new BehaviorSubject<any>(null);
+  // Using BehaviorSubject with typed GetUser
+  private userSubject = new BehaviorSubject<GetUser | null>(null);
   user$ = this.userSubject.asObservable();
 
   constructor(private http: HttpClient, private cookieService: CookieService) {
@@ -20,8 +20,7 @@ export class AuthenticateService {
 
     if (userCookie && userCookie !== 'undefined' && userCookie !== '') {
       try {
-        // שורה 23 המפורסמת - כאן זה יעבוד כי userSubject הוא BehaviorSubject
-        this.userSubject.next(JSON.parse(userCookie));
+        this.userSubject.next(JSON.parse(userCookie) as GetUser);
       } catch (e) {
         this.userSubject.next(null);
       }
@@ -30,32 +29,32 @@ export class AuthenticateService {
     }
   }
 
-  login(email: string, password: string) {
-    const loginRequest: LoginRequest = { Email: email, Password: password };
-    return this.http.post<any>(`${this.baseUrl}/login`, loginRequest).pipe(
+  login(email: string, password: string): Observable<LoginResponse> {
+    const loginRequest: LoginRequest = { email: email, password: password };
+    return this.http.post<LoginResponse>(`${this.baseUrl}/login`, loginRequest).pipe(
       tap(response => {
         this.cookieService.set('authToken', response.token);
         this.cookieService.set('user', JSON.stringify(response.user));
-        // עדכון ה-Subject
+        // Update subject with proper type
         this.userSubject.next(response.user);
       })
     );
   }
 
-  logout() {
+  logout(): void {
     this.cookieService.delete('user');
     this.cookieService.delete('authToken');
     this.userSubject.next(null);
   }
 
-  register(email: string, password: string, first_name: string, last_name: string, phone: string): Observable<any> {
+  register(email: string, password: string, first_name: string, last_name: string, phone: string): Observable<GetUser> {
     const newUser: CreateUser = {
-      Email: email,
-      Password: password,
-      First_name: first_name,
-      Last_name: last_name,
-      Phone: phone
+      email: email,
+      password: password,
+      first_name: first_name,
+      last_name: last_name,
+      phone: phone
     };
-    return this.http.post<any>(`${this.baseUrl}/register`, newUser);
+    return this.http.post<GetUser>(`${this.baseUrl}/register`, newUser);
   }
 }

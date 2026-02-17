@@ -39,7 +39,7 @@
 
     <div class="flex flex-column gap-2 mb-4">
         <p-floatlabel variant="in" class="w-full">
-            <p-select [options]="(categories$ | async) || []" formControlName="category_Id" optionValue="id"
+            <p-select [options]="(categories$ | async) || []" formControlName="categoryId" optionValue="id"
                 optionLabel="name" id="cat_sel" styleClass="w-full" class="w-full" />
             <label for="cat_sel">בחר קטגוריה</label>
         </p-floatlabel>
@@ -47,8 +47,8 @@
 
     <div class="flex flex-column gap-2 mb-4">
         <p-floatlabel variant="in" class="w-full">
-            <p-select [options]="(donors$ | async) || []" formControlName="donor_Id" optionLabel="first_name"
-                optionValue="id" id="don_sel" styleClass="w-full" class="w-full" />
+            <p-select [options]="(donors$ | async) ?? []" formControlName="donorId" optionValue="id"
+                optionLabel="first_name" id="don_sel" styleClass="w-full" class="w-full" />
             <label for="don_sel">בחר תורם</label>
         </p-floatlabel>
     </div>

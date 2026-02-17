@@ -9,6 +9,7 @@ import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { Router, RouterModule } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { Category } from '../../../models/category.model';
 @Component({
   selector: 'app-get-all-categories',
   standalone: true,
@@ -46,8 +47,8 @@ export class GetAllCategories {
     });
     this.ref?.onClose.subscribe((result) => {
       if (result) {
-        const obj = { name: result.name, picture: result.picture.name };
-        this.categoryService.addCategory(obj, result.picture).subscribe(() => {
+        const obj: Category = { name: result.name, picture: result.picture.name || 'empty' };
+        this.categoryService.addCategory(obj, result.Picture).subscribe(() => {
           this.categories$ = this.categoryService.getCategories();
           this.messageService.add({ severity: 'success', summary: 'הקטגוריה נוספה בהצלחה', detail: '', life: 3000 });
 
@@ -68,7 +69,7 @@ export class GetAllCategories {
       this.ref?.onClose.subscribe((result) => {
         if (result) {
           const file = result.picture == this.IMAGE_BASE_URL + data.picture ? null : result.picture;
-          const obj = { name: result.name, picture: result.picture.name };
+          const obj: Category = { name: result.name, picture: result.picture.name || data.picture };
           this.categoryService.updateCategory(id, obj, file).subscribe(() => {
             this.categories$ = this.categoryService.getCategories();
             this.messageService.add({ severity: 'success', summary: 'הקטגוריה עודכנה בהצלחה', detail: '', life: 3000 });

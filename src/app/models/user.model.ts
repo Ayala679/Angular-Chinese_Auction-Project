@@ -6,19 +6,19 @@ export enum Role {
 }
 
 export class CreateUser {
-    Email!: string;
-    Password!: string;
-    First_name!: string;
-    Last_name!: string;
-    Phone?: string;
+    email!: string;
+    password!: string;
+    first_name!: string;
+    last_name!: string;
+    phone?: string;
 }
 
 export class GetUser {
-    Id!: number;
-    Email!: string;
-    First_name!: string;
-    Last_name!: string;
-    Phone?: string;
-    Role!: number; 
-    Purchases: GetPurchase[] = [];
+    id!: number;
+    email!: string;
+    first_name!: string;
+    last_name!: string;
+    phone?: string;
+    role!: number; 
+    purchases: GetPurchase[] = [];
 }

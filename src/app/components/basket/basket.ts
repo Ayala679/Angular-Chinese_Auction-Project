@@ -223,7 +223,7 @@ export class Basket {
         // כאן תוכל להוסיף את הלוגיקה לביצוע התשלום בפועל, למשל קריאה ל-API של התשלום
         this.packages.forEach((pack: any) => {
           CardsList = pack.cards.map((card: any) => {
-            return { Gift_Id: card.id, User_Id: JSON.parse(this.user).id, Package_Id: pack.id } as CreatePurchase;
+            return { giftId: card.id, userId: JSON.parse(this.user).id, packageId: pack.id } as CreatePurchase;
           })
           this.purchaseService.addPurchase(CardsList).subscribe({
             next: () => {

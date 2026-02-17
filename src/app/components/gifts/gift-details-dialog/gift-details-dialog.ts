@@ -48,7 +48,7 @@ import { DividerModule } from 'primeng/divider';
 
 
             <!-- Lottery Status Card -->
-            <div class="col-12 md:col-6" *ngIf="gift.is_lottery">
+            <div class="col-12 md:col-6" *ngIf="gift.isLottery">
               <div class="info-card info-card-success">
                 <span class="card-label">זמינות</span>
                 <div class="card-value">
@@ -64,7 +64,7 @@ import { DividerModule } from 'primeng/divider';
               <div class="info-card info-card-accent">
                 <span class="card-label">תורם</span>
                 <div class="card-value-donor">
-                  {{ donor.Company_name || 'תורם פרטי' }}
+                  {{ donor.companyName || 'תורם פרטי' }}
                 </div>
               </div>
             </div>

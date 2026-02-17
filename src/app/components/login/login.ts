@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, FormControl } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -10,6 +10,8 @@ import { ToastModule } from 'primeng/toast';
 import { InputMaskModule } from 'primeng/inputmask';
 import { AuthenticateService } from '../../services/authenticate-service';
 import { Router } from '@angular/router';
+import { LoginRequest } from '../../models/authenticate.model';
+
 @Component({
   selector: 'app-login',
   standalone: true,
@@ -17,45 +19,49 @@ import { Router } from '@angular/router';
   templateUrl: './login.html',
   styleUrl: './login.scss'
 })
-export class Login {
+export class Login implements OnInit {
   router = inject(Router);
   messageService = inject(MessageService);
   authService = inject(AuthenticateService);
-  loginForm!: FormGroup;
+  formBuilder = inject(FormBuilder);
+
+  loginForm!: FormGroup<{
+    email: FormControl<string | null>;
+    password: FormControl<string | null>;
+  }>;
 
   ngOnInit() {
-    this.loginForm = new FormGroup({
-      Email: new FormControl('', [Validators.required, Validators.email]),
-      Password: new FormControl('', [Validators.required, Validators.minLength(8)],),
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
-  isInvalid(name: string) {
+  isInvalid(name: string): boolean {
     const control = this.loginForm.get(name);
     return control ? control.invalid && (control.touched || control.dirty) : false;
   }
 
   onSubmit() {
-    const { Email, Password } = this.loginForm.value;
-    this.authService.login(Email, Password).subscribe({
+    if (!this.loginForm.valid) return;
+
+    const formValue = this.loginForm.value as LoginRequest;
+    this.authService.login(formValue.email, formValue.password).subscribe({
       next: (response) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User logged successfully!', life: 3000 });
         console.log('User logged:', response);
         this.loginForm.reset();
         this.router.navigate(['/']);
-
       },
       error: (err) => {
         let errorMessage = '';
         if (err.status === 401) {
           errorMessage = "שם המשתמש או הסיסמה אינם נכונים"
-        }
-        else {
+        } else {
           errorMessage = err.error?.detail || err.error?.title || (typeof err.error === 'string' ? err.error : 'פרטי התחברות שגויים');
         }
         this.messageService.add({ severity: 'error', summary: 'Error', detail: errorMessage, life: 3000 });
       }
     });
   }
-
 }

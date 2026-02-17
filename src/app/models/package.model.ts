@@ -1,14 +1,14 @@
 export class CreatePackageDto {
-    Name!: string;
-    Description!: string;
-    Cards_quantity!: number;
-    Price!: number;
+    name!: string;
+    description!: string;
+    cardsQuantity!: number;
+    price!: number;
 }
 
 export class GetPackageDto {
-    Id!: number;
-    Name!: string;
-    Description!: string;
-    Cards_quantity!: number;
-    Price!: number;
+    id!: number;
+    name!: string;
+    description!: string;
+    cardsQuantity!: number;
+    price!: number;
 }

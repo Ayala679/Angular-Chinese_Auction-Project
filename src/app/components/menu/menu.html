@@ -63,7 +63,7 @@
                     <div class="user-pill flex align-items-center gap-2 cursor-pointer p-1 pr-3 border-round-3xl bg-white-alpha-10 border-1 border-white-alpha-20 hover:bg-white-alpha-20 transition-all"
                         (click)="showUserDropdown = !showUserDropdown">
                         <span class="hidden sm:inline font-bold text-sm text-white">{{ currentUser.first_name }}</span>
-                        <p-avatar [label]="currentUser.first_name?.[0]" shape="circle"
+                        <p-avatar [label]="currentUser.first_name[0]" shape="circle"
                             styleClass="bg-orange-500 text-white font-bold shadow-2"></p-avatar>
                     </div>
 

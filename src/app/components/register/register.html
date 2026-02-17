@@ -8,14 +8,14 @@
             
             <div class="flex flex-column">
                 <p-floatlabel variant="in">
-                    <input pInputText id="email" formControlName="Email" autocomplete="off" 
-                           [invalid]="isInvalid('Email')" class="register-input w-full" />
+                    <input pInputText id="email" formControlName="email" autocomplete="off" 
+                           [invalid]="isInvalid('email')" class="register-input w-full" />
                     <label for="email" class="text-color-secondary">Email</label>
                 </p-floatlabel>
-                @if (isInvalid('Email')) {
+                @if (isInvalid('email')) {
                     <p-message severity="error" size="small" variant="simple" class="mt-1">
-                        @if (registerForm.get('Email')?.hasError('required')) { Email is required. }
-                        @if (registerForm.get('Email')?.hasError('email')) { Please enter a valid email. }
+                        @if (registerForm.get('email')?.hasError('required')) { Email is required. }
+                        @if (registerForm.get('email')?.hasError('email')) { Please enter a valid email. }
                     </p-message>
                 }
             </div>
@@ -23,19 +23,19 @@
             <div class="flex gap-3 align-items-start">
                 <div class="flex-1 flex flex-column">
                     <p-floatlabel variant="in">
-                        <input pInputText id="fname" formControlName="First_name" [invalid]="isInvalid('First_name')" class="register-input w-full" />
+                        <input pInputText id="fname" formControlName="firstName" [invalid]="isInvalid('firstName')" class="register-input w-full" />
                         <label for="fname" class="text-color-secondary">First Name</label>
                     </p-floatlabel>
-                    @if (isInvalid('First_name')) {
+                    @if (isInvalid('firstName')) {
                         <p-message severity="error" size="small" variant="simple" class="mt-1">First Name is required.</p-message>
                     }
                 </div>
                 <div class="flex-1 flex flex-column">
                     <p-floatlabel variant="in">
-                        <input pInputText id="lname" formControlName="Last_name" [invalid]="isInvalid('Last_name')" class="register-input w-full" />
+                        <input pInputText id="lname" formControlName="lastName" [invalid]="isInvalid('lastName')" class="register-input w-full" />
                         <label for="lname" class="text-color-secondary">Last Name</label>
                     </p-floatlabel>
-                    @if (isInvalid('Last_name')) {
+                    @if (isInvalid('lastName')) {
                         <p-message severity="error" size="small" variant="simple" class="mt-1">Last Name is required.</p-message>
                     }
                 </div>
@@ -44,22 +44,22 @@
             <div class="flex gap-3 align-items-start">
                 <div class="flex-1 flex flex-column">
                     <p-floatlabel variant="in">
-                        <input pInputText type="password" id="pass" formControlName="Password" 
-                               [invalid]="isInvalid('Password')" class="register-input w-full" />
+                        <input pInputText type="password" id="pass" formControlName="password" 
+                               [invalid]="isInvalid('password')" class="register-input w-full" />
                         <label for="pass" class="text-color-secondary">Password</label>
                     </p-floatlabel>
-                    @if (isInvalid('Password')) {
+                    @if (isInvalid('password')) {
                         <p-message severity="error" size="small" variant="simple" class="mt-1">Password must be at least 8 characters.</p-message>
                     }
                 </div>
                 <div class="flex-1 flex flex-column">
                     <p-floatlabel variant="in">
-                        <input pInputText type="password" id="confirmPass" formControlName="ConfirmPassword" 
-                               [invalid]="isInvalid('ConfirmPassword') || (registerForm.get('ConfirmPassword')?.touched && registerForm.get('Password')?.value !== registerForm.get('ConfirmPassword')?.value)" 
+                        <input pInputText type="password" id="confirmPass" formControlName="confirmPassword" 
+                               [invalid]="isInvalid('confirmPassword') || (registerForm.get('confirmPassword')?.touched && registerForm.get('password')?.value !== registerForm.get('confirmPassword')?.value)" 
                                class="register-input w-full" />
                         <label for="confirmPass" class="text-color-secondary">Confirm Password</label>
                     </p-floatlabel>
-                    @if (isInvalid('ConfirmPassword') || (registerForm.get('ConfirmPassword')?.touched && registerForm.get('Password')?.value !== registerForm.get('ConfirmPassword')?.value)) {
+                    @if (isInvalid('confirmPassword') || (registerForm.get('confirmPassword')?.touched && registerForm.get('password')?.value !== registerForm.get('confirmPassword')?.value)) {
                         <p-message severity="error" size="small" variant="simple" class="mt-1">Passwords do not match.</p-message>
                     }
                 </div>
@@ -67,7 +67,7 @@
 
             <div class="flex flex-column">
                 <p-floatlabel variant="in">
-                    <p-inputmask id="phone" formControlName="Phone" mask="999-999-9999" slotChar=" " [autoClear]="true" styleClass="register-input w-full" />
+                    <p-inputmask id="phone" formControlName="phone" mask="999-999-9999" slotChar=" " [autoClear]="true" styleClass="register-input w-full" />
                     <label for="phone" class="text-color-secondary">Phone (Optional)</label>
                 </p-floatlabel>
             </div>

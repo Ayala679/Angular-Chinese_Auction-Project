@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { FormGroup, FormControl, Validators, ReactiveFormsModule, AbstractControl } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -10,6 +10,8 @@ import { ToastModule } from 'primeng/toast';
 import { InputMaskModule } from 'primeng/inputmask';
 import { AuthenticateService } from '../../services/authenticate-service';
 import { Router } from '@angular/router';
+import { CreateUser } from '../../models/user.model';
+
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -19,44 +21,63 @@ import { Router } from '@angular/router';
 })
 export class Register implements OnInit {
   messageService = inject(MessageService);
-  registerForm!: FormGroup;
-  router = inject(Router)
+  router = inject(Router);
+  authService = inject(AuthenticateService);
+  formBuilder = inject(FormBuilder);
+
+  registerForm!: FormGroup<{
+    email: any;
+    password: any;
+    confirmPassword: any;
+    firstName: any;
+    lastName: any;
+    phone: any;
+  }>;
+
   ngOnInit() {
-    this.registerForm = new FormGroup({
-      Email: new FormControl('', [Validators.required, Validators.email]),
-      Password: new FormControl('', [Validators.required, Validators.minLength(8)],),
-      ConfirmPassword: new FormControl('', [Validators.required]),
-      First_name: new FormControl('', [Validators.required]),
-      Last_name: new FormControl('', [Validators.required]),
-      Phone: new FormControl('', [Validators.pattern("^[0-9-]*$")]),
-    },{ validators: this.passwordValidator });
+    this.registerForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      confirmPassword: ['', [Validators.required]],
+      firstName: ['', [Validators.required]],
+      lastName: ['', [Validators.required]],
+      phone: ['', [Validators.pattern("^[0-9-]*$")]],
+    }, { validators: this.passwordValidator.bind(this) });
   }
 
-passwordValidator(control: AbstractControl) {
-  const isMatch = control.get('Password')?.value === control.get('ConfirmPassword')?.value;
-  control.get('ConfirmPassword')?.setErrors(isMatch ? null : { mismatch: true });
-  return isMatch ? null : { mismatch: true };
-}
+  passwordValidator(control: AbstractControl): ValidationErrors | null {
+    const isMatch = control.get('password')?.value === control.get('confirmPassword')?.value;
+    const confirmPasswordControl = control.get('confirmPassword');
+    if (confirmPasswordControl) {
+      confirmPasswordControl.setErrors(isMatch ? null : { mismatch: true });
+    }
+    return isMatch ? null : { mismatch: true };
+  }
 
+  isInvalid(name: string): boolean {
+    const control = this.registerForm.get(name);
+    return control ? control.invalid && (control.touched || control.dirty) : false;
+  }
 
-isInvalid(name: string) {
-  const control = this.registerForm.get(name);
-  return control ? control.invalid && (control.touched || control.dirty) : false;
-}
+  onSubmit() {
+    if (!this.registerForm.valid) return;
 
-authService = inject(AuthenticateService); 
-
-onSubmit() {
-    const { Email, Password, First_name, Last_name, Phone } = this.registerForm.value;
-    this.authService.register(Email, Password, First_name, Last_name, Phone).subscribe({
+    const formValue = this.registerForm.value as CreateUser & { confirmPassword: string };
+    this.authService.register(
+      formValue.email,
+      formValue.password,
+      formValue.first_name,
+      formValue.last_name,
+      formValue.phone || ''
+    ).subscribe({
       next: (response) => {
         this.messageService.add({ severity: 'success', summary: 'Success', detail: 'User registered successfully!', life: 3000 });
         console.log('User registered:', response);
-        this.registerForm.reset(); 
+        this.registerForm.reset();
         this.router.navigate(['/login']);
       },
       error: (err) => {
-        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error , life: 3000 });
+        this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error, life: 3000 });
         console.error('Registration error:', err);
       }
     });

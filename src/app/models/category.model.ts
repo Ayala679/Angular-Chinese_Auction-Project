@@ -1,13 +1,13 @@
 import { GiftDto } from './gift.model';
 
 export class Category {
-    Name!: string;
-    Picture!: string;
+    name!: string;
+    picture!: string;
 }
 
 export class GetCategory {
-    Id!: number;
-    Name!: string;
-    Picture!: string;
-    Gifts: GiftDto[] = [];
+    id!: number;
+    name!: string;
+    picture!: string;
+    gifts: GiftDto[] = [];
 }

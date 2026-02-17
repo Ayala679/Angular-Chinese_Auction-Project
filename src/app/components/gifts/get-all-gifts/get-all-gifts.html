@@ -3,9 +3,9 @@
     <div class="gifts-header">
         <h2 class="section-title" style="color: white; font-size: 2.2rem; font-weight: 800; margin-bottom: 5px;">Exclusive Gifts ✨</h2>
         <p class="section-subtitle" style="color: rgba(255,255,255,0.7); font-size: 0.9rem; margin-bottom: 15px;">Discover amazing items and win wonderful prizes</p>
-        
+        @if (role=='0') {
         <button pButton (click)="showGiftChild()" label="Add New Gift" icon="pi pi-plus" 
-            class="add-gift-btn"></button>
+            class="add-gift-btn"></button>}
     </div>
 
     <div class="gifts-grid">
@@ -37,8 +37,8 @@
                         <span class="donated-label">נתרם ע"י:</span>
                         <div class="donor-info-row">
                             <div class="donor-avatar-container">
-                                @if (gift.donor && gift.donor.is_publish && gift.donor.company_picture) {
-                                    <img [src]="'https://localhost:7031/images/companies/' + gift.donor.company_picture" class="donor-circle-img">
+                                @if (gift.donor && gift.donor.isPublish && gift.donor.companyPicture) {
+                                    <img [src]="'https://localhost:7031/images/companies/' + gift.donor.companyPicture" class="donor-circle-img">
                                 } @else {
                                     <div class="donor-logo-placeholder" style="background: rgba(255,255,255,0.1); border-radius: 50%; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
                                         <i class="pi pi-user" style="color: rgba(255,255,255,0.3); font-size: 0.9rem;"></i>
@@ -46,9 +46,9 @@
                                 }
                             </div>
                             <div class="donor-text">
-                                @if (gift.donor && gift.donor.is_publish) {
-                                    <span class="d-name">{{ gift.donor.company_name }}</span>
-                                    <span class="d-company">{{ gift.donor.company_description }}</span>
+                                @if (gift.donor && gift.donor.isPublish) {
+                                    <span class="d-name">{{ gift.donor.companyName }}</span>
+                                    <span class="d-company">{{ gift.donor.companyDescription }}</span>
                                 } @else {
                                     <span class="d-name">בעילום שם</span>
                                 }

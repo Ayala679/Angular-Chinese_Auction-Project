@@ -1,19 +1,19 @@
 export class CreatePurchase {
-    Gift_Id!: number;
-    User_Id!: number;
-    Package_Id!: number;
+    giftId!: number;
+    userId!: number;
+    packageId!: number;
 }
 
 export class GetPurchase {
-    Id!: number;
-    Gift_Id!: number;
-    Package_Id!: number;
-    User_Id!: number;
-    Unique_Package_Id!: string;
-    Is_Won: boolean = false;
+    id!: number;
+    giftId!: number;
+    packageId!: number;
+    userId!: number;
+    uniquePackageId!: string;
+    isWon: boolean = false;
 }
 
 export class UpdatePurchase {
-    Is_Won: boolean = false;
+    isWon: boolean = false;
 }
 

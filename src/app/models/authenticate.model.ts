@@ -1,13 +1,13 @@
 import { GetUser } from './user.model';
 
 export class LoginRequest {
-    Email!: string;
-    Password!: string;
+    email!: string;
+    password!: string;
 }
 
 export class LoginResponse {
-    Token!: string;
-    TokenType: string = "Bearer";
-    ExpiresInMinutes!: number;
-    User: GetUser = new GetUser();
+    token!: string;
+    tokenType: string = "Bearer";
+    expiresInMinutes!: number;
+    user: GetUser = new GetUser();
 }
