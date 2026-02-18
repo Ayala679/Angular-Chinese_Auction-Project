@@ -52,6 +52,7 @@ export class Basket {
     this.packages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
 
     this.loadGifts()
+
   }
 
   loadGifts() {
@@ -81,17 +82,25 @@ export class Basket {
       this.allCards = [];
     } else {
       const requests = uniqueIds.map(id => this.giftService.getGiftById(Number(id)));
-
       forkJoin(requests)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe({
           next: (gifts: any[]) => {
             this.allCards = gifts
               .filter(g => g !== null)
-              .map(gift => ({
-                ...gift,
-                user_count: quantityMap[gift.id?.toString()]
-              }));
+              .map(gift => {
+                // הבטחת המרת ה-ID למחרוזת לצורך השוואה מדויקת מול ה-Map
+                const giftIdStr = gift.id.toString();
+                return {
+                  ...gift,
+                  // כאן אנחנו מזריקים את הכמות שחושבה קודם לתוך האובייקט שנשלח ל-HTML
+                  user_count: quantityMap[giftIdStr] || 0
+                };
+                
+              });
+                console.log(this.uniquePackages);
+
+            // חשוב: לעדכן את Angular שהנתונים השתנו
             this.cdr.detectChanges();
           },
           error: (err) => console.error('Error fetching gifts:', err)
@@ -219,6 +228,7 @@ export class Basket {
       icon: 'pi pi-credit-card',
       acceptLabel: "כן, אני רוצה לשלם",
       rejectLabel: "לא, אני רוצה להמשיך להסתכל",
+
       accept: () => {
         // כאן תוכל להוסיף את הלוגיקה לביצוע התשלום בפועל, למשל קריאה ל-API של התשלום
         this.packages.forEach((pack: any) => {
@@ -236,6 +246,7 @@ export class Basket {
                 icon: 'pi pi-check',
                 acceptLabel: "כן, אני רוצה להמשיך לקניות",
                 rejectLabel: "לא, אני רוצה להסתכל על המתנות שלי",
+
                 accept: () => {
                   this.router.navigate(['/']);
                 },

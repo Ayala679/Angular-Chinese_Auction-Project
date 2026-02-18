@@ -116,7 +116,6 @@ export class GetAllDonors implements OnInit {
         const email = (d.email || '').toString().toLowerCase();
         return email.includes(lower);
       } else if (this.filterType === 'gift') {
-        // Note: gifts property structure depends on API response
         const gifts = (d as any).gifts || [];
         return gifts.some((g: GetGiftDto) => ((g.name || '') + ' ' + (g.description || '')).toString().toLowerCase().includes(lower));
       }
@@ -151,11 +150,9 @@ export class GetAllDonors implements OnInit {
   }
 
   onRowExpand(event: TableRowExpandEvent) {
-    this.messageService.add({ severity: 'info', summary: 'פרטים', detail: 'שורה הורחבה', life: 3000 });
   }
 
   onRowCollapse(event: TableRowCollapseEvent) {
-    this.messageService.add({ severity: 'success', summary: 'סגור', detail: 'שורה סגורה', life: 3000 });
   }
 
   customSort(event: any) {
@@ -182,21 +179,29 @@ export class GetAllDonors implements OnInit {
     this.ref = this.dialogService.open(DonorForm, {
       header: 'הוספת תורם חדש',
       width: '40%',
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000
+      styleClass: 'premium-dialog',
+      contentStyle: {
+        'max-height': '90vh',
+        'overflow-y': 'auto',
+        'padding': '0',
+        'background': '#1a162e',
+      },
+      showHeader: false
     });
 
     this.ref?.onClose.subscribe((result) => {
       if (result) {
+        console.log(result);
+
         const createDonorDto: CreateDonor = {
           email: result.email,
           password: result.password,
-          first_name: result.firstName,
-          last_name: result.lastName,
+          first_name: result.first_name,
+          last_name: result.last_name,
           phone: result.phone,
-          company_name: result.companyName,
-          company_description: result.companyDescription,
-          is_publish: result.isPublish
+          company_name: result.company_name,
+          company_description: result.company_description,
+          is_publish: result.is_publish
         };
 
         this.donorService.addDonor(createDonorDto, result.companyPicture).subscribe({
@@ -219,8 +224,14 @@ export class GetAllDonors implements OnInit {
     this.ref = this.dialogService.open(GiftForm, {
       header: 'הוספת מתנה חדש',
       width: '40%',
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
+      styleClass: 'premium-dialog',
+      contentStyle: {
+        'max-height': '90vh',
+        'overflow-y': 'auto',
+        'padding': '0',
+        'background': '#1a162e',
+      }, baseZIndex: 10000,
+      showHeader: false,
       data: { donorId: donor.id }
     });
 
@@ -245,8 +256,14 @@ export class GetAllDonors implements OnInit {
     this.ref = this.dialogService.open(GiftForm, {
       header: 'עריכת מתנה',
       width: '40%',
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
+      styleClass: 'premium-dialog',
+      contentStyle: {
+        'max-height': '90vh',
+        'overflow-y': 'auto',
+        'padding': '0',
+        'background': '#1a162e',
+      }, baseZIndex: 10000,
+      showHeader: false,
       data: gift
     });
 
@@ -260,7 +277,10 @@ export class GetAllDonors implements OnInit {
           },
           error: (err) => {
             console.error('Error updating gift:', err);
-            this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'העדכון נכשל' });
+            let message = 'העדכון נכשל'
+            if (err.error)
+              message = err.error
+            this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: message });
           }
         });
       }
@@ -271,8 +291,14 @@ export class GetAllDonors implements OnInit {
     this.ref = this.dialogService.open(DonorForm, {
       header: 'עריכת תורם',
       width: '40%',
-      contentStyle: { overflow: 'auto' },
-      baseZIndex: 10000,
+      styleClass: 'premium-dialog',
+      contentStyle: {
+        'max-height': '90vh',
+        'overflow-y': 'auto',
+        'padding': '0',
+        'background': '#1a162e',
+      }, baseZIndex: 10000,
+      showHeader: false,
       data: donor
     });
 
@@ -280,15 +306,16 @@ export class GetAllDonors implements OnInit {
       console.log(result);
 
       if (result) {
+
         const updateDonorDto: Partial<CreateDonor> = {
           email: result.email,
           password: result.password,
-          first_name: result.firstName,
-          last_name: result.lastName,
+          first_name: result.first_name,
+          last_name: result.last_name,
           phone: result.phone,
-          company_name: result.companyName,
-          company_description: result.companyDescription,
-          is_publish: result.isPublish
+          company_name: result.company_name,
+          company_description: result.company_description,
+          is_publish: result.is_publish
         };
 
         this.donorService.updateDonor(donor.id!, updateDonorDto, result.companyPicture).subscribe({
@@ -304,7 +331,10 @@ export class GetAllDonors implements OnInit {
           },
           error: (err) => {
             console.error('Error updating donor:', err);
-            this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'העדכון נכשל' });
+            let message = 'העדכון נכשל'
+            if (err.error)
+              message = err.error
+            this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: message });
           }
         });
       }
@@ -313,7 +343,7 @@ export class GetAllDonors implements OnInit {
 
   saveDonor() {
     if (!this.donor.id) return;
-    
+
     const updateDonorDto: Partial<CreateDonor> = {
       email: (this.donor as any).email,
       first_name: (this.donor as any).firstName,
@@ -347,7 +377,10 @@ export class GetAllDonors implements OnInit {
           },
           error: (err) => {
             console.error('Error deleting donor:', err);
-            this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: 'המחיקה נכשלה' });
+                        let message =  'המחיקה נכשלה'
+            if(err.error)
+              message = err.error
+            this.messageService.add({ severity: 'error', summary: 'שגיאה', detail: message });
           }
         });
       }

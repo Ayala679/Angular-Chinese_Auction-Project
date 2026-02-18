@@ -136,8 +136,7 @@ export class GetAllPackages implements OnInit {
       cards: []
     });
     const u = JSON.parse(this.user).id;
-    this.cookieService.set(u, JSON.stringify(this.userPackages));
-  }
+this.cookieService.set(u, JSON.stringify(this.userPackages), { path: '/' });  }
 
   removePackage(packageData: any) {
     if (packageData.quantity === 0)

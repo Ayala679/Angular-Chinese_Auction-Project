@@ -21,7 +21,7 @@ import { AsyncPipe } from '@angular/common';
 import { DonorService } from '../../../services/donor-service';
 import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { GiftDto, GetGiftDto } from '../../../models/gift.model';
+import { GiftDto } from '../../../models/gift.model';
 import { ManagerGetDonor } from '../../../models/donor.model';
 
 @Component({
@@ -104,6 +104,7 @@ export class GiftForm implements OnInit {
       });      
       if (this.config.data.picture) {
         this.previewImage = this.BASE_IMG_URL + this.config.data.picture;
+        this.giftForm.get('picture')?.setValue(this.config.data.picture);
       }
     }
   }

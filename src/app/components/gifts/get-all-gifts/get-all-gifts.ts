@@ -1,7 +1,6 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { GiftService } from '../../../services/gift-service';
-import { ChangeDetectorRef } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -39,6 +38,7 @@ export class GetAllGifts implements OnInit {
   user: string = this.cookieService.get('user') || '';
   role: string = '1';
   router = inject(Router);
+
   ngOnInit() {
     this.route.params.subscribe(params => {
       const categoryId = params['categoryId'];
@@ -47,9 +47,9 @@ export class GetAllGifts implements OnInit {
       } else {
         this.loadGifts();
       }
-
     });
-    if (this.user && this.user !== 'undefined') {
+
+    if (this.user && this.user !== 'undefined' && this.user !== '') {
       const parsedUser = JSON.parse(this.user);
       this.role = parsedUser.role !== undefined ? parsedUser.role.toString() : '1';
     }
@@ -59,97 +59,142 @@ export class GetAllGifts implements OnInit {
     this.giftService.GetGiftsByCategory(categoryId).subscribe(data => {
       this.gifts = data;
       this.cdr.detectChanges();
-
     });
-
   }
-
 
   loadGifts() {
     this.giftService.getGifts().subscribe(data => {
       this.gifts = data;
-      this.cdr.detectChanges()
+      this.cdr.detectChanges();
       console.log('gifts', this.gifts);
-
     });
   }
 
-  addToCart(product: any) {
+  // addToCart(product: any) {
+  //   if (!this.user || this.user === 'undefined' || this.user === '') {
+  //     this.confirmationService.confirm({
+  //       header: 'נדרשת התחברות',
+  //       message: 'אופס, נראה שאתה לא מחובר. רוצה להתחבר או להירשם?',
+  //       icon: 'pi pi-user',
+  //       acceptLabel: "כן, אני רוצה להתחבר",
+  //       rejectLabel: "לא, אני רוצה להמשיך להסתכל",
+  //       accept: () => { this.router.navigate(['/login']) },
+  //       reject: () => { this.router.navigate(['/gifts']); },
+  //     });
+  //     return;
+  //   }
 
-    if (!this.user || this.user === 'undefined' || this.user === '') {
-      this.confirmationService.confirm({
-        header: 'נדרשת התחברות',
-        message: 'אופס, נראה שאתה לא מחובר. רוצה להתחבר או להירשם?',
-        icon: 'pi pi-user',
-        acceptLabel: "כן, אני רוצה להתחבר",
-        rejectLabel: "לא, אני רוצה להמשיך להסתכל",
-        accept: () => {
-          this.router.navigate(['/login'])
-        },
-        reject: () => {
-          this.router.navigate(['/gifts']);
-        },
-      });
-      return;
-    }
+  //   const parsedUserData = JSON.parse(this.user);
+  //   const userId = parsedUserData?.id;
+  //   if (!userId) return;
 
-    const parsedUserData = JSON.parse(this.user);
-    const userId = parsedUserData?.id;
-    if (!userId) return;
+  //   // שליפה לפי מזהה המשתמש (כדי להתאים לדף הסל)
+  //   const cookieKey = userId.toString();
+  //   const cookieData = this.cookieService.get(cookieKey) || '[]';
+  //   let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
 
-    const cookieData = this.cookieService.get(userId) || '[]';
-    let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
-    
-    if (userPackages.length === 0) {
-      this.confirmationService.confirm({
-        header: 'לא נבחרה חבילה',
-        message: 'אופס, לא בחרת עדיין חבילה. רוצה להוסיף חבילה חדשה?',
-        icon: 'pi pi-exclamation-triangle',
-        acceptLabel: "אה! אני רוצה להוסיף חבילה",
-        rejectLabel: "...לא:-) להמשיך להסתכל",
-        acceptButtonStyleClass: 'p-button-success',
-        rejectButtonStyleClass: 'p-button-text',
-        accept: () => {
-          this.router.navigate(['/']);
-        },
-        reject: () => {
-          this.router.navigate(['/gifts']);
-        }
-      });
-      return;
-    }
-    const existingPackage = userPackages.find((pack: any) => pack.emptyQuantity > 0);
-    console.log(existingPackage);
-    
-    if (existingPackage) {
-      existingPackage.cards.push(product);
-      existingPackage.emptyQuantity -= 1;
-      this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה לחבילה שלך' });
-      this.cookieService.set(userId, JSON.stringify(userPackages));
-    }
-    else {
-      this.confirmationService.confirm({
-        message: '?אופס, נגמרו לך הכרטיסים הריקים בחבילות שבחרת. רוצה להוסיף חבילה חדשה',
-        header: 'הכרטיסים בחבילות אזלו',
-        icon: 'pi pi-exclamation-triangle',
-        acceptLabel: "אה! אני רוצה להוסיף חבילה",
-        rejectLabel: "...לא:-) להמשיך להסתכל",
-        acceptButtonStyleClass: 'p-button-success',
-        rejectButtonStyleClass: 'p-button-text',
-        accept: () => {
-          this.router.navigate(['/']);
-        },
-        reject: () => {
-          this.router.navigate(['/gifts']);
-        }
-      });
-    }
+  //   if (userPackages.length === 0) {
+  //     this.confirmationService.confirm({
+  //       header: 'לא נבחרה חבילה',
+  //       message: 'אופס, לא בחרת עדיין חבילה. רוצה להוסיף חבילה חדשה?',
+  //       icon: 'pi pi-exclamation-triangle',
+  //       acceptLabel: "אה! אני רוצה להוסיף חבילה",
+  //       rejectLabel: "...לא:-) להמשיך להסתכל",
+  //       accept: () => { this.router.navigate(['/']); },
+  //       reject: () => { this.router.navigate(['/gifts']); }
+  //     });
+  //     return;
+  //   }
 
+  //   const existingPackage = userPackages.find((pack: any) => pack.emptyQuantity > 0);
+
+  //   if (existingPackage) {
+  //     // וידוא קיום מערך כרטיסים לפני הוספה
+  //     if (!existingPackage.cards) {
+  //       existingPackage.cards = [];
+  //     }
+
+  //     // הוספת המוצר
+  //     existingPackage.cards.push(product);
+  //     existingPackage.emptyQuantity -= 1;
+
+  //     this.cookieService.set(cookieKey, JSON.stringify(userPackages), { path: '/' });    
+  //     this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה לחבילה שלך' });
+  //     this.cdr.detectChanges();
+  //   } else {
+  //     this.confirmationService.confirm({
+  //       message: '?אופס, נגמרו לך הכרטיסים הריקים בחבילות שבחרת. רוצה להוסיף חבילה חדשה',
+  //       header: 'הכרטיסים בחבילות אזלו',
+  //       icon: 'pi pi-exclamation-triangle',
+  //       acceptLabel: "אה! אני רוצה להוסיף חבילה",
+  //       rejectLabel: "...לא:-) להמשיך להסתכל",
+  //       accept: () => { this.router.navigate(['/']); },
+  //       reject: () => { this.router.navigate(['/gifts']); }
+  //     });
+  //   }
+  // }
+
+addToCart(product: any) {
+  if (!this.user || this.user === 'undefined' || this.user === '') {
+    this.confirmationService.confirm({
+      header: 'נדרשת התחברות',
+      message: 'אופס, נראה שאתה לא מחובר. רוצה להתחבר או להירשם?',
+      icon: 'pi pi-user',
+      acceptLabel: "כן, אני רוצה להתחבר",
+      rejectLabel: "לא, אני רוצה להמשיך להסתכל",
+      accept: () => { this.router.navigate(['/login']) },
+      reject: () => { this.router.navigate(['/gifts']); },
+    });
+    return;
   }
 
+  const parsedUserData = JSON.parse(this.user);
+  const userId = parsedUserData?.id;
+  if (!userId) return;
 
+  const cookieKey = userId.toString();
+  const cookieData = this.cookieService.get(cookieKey) || '[]';
+  let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
 
+  if (userPackages.length === 0) {
+    this.confirmationService.confirm({
+      header: 'לא נבחרה חבילה',
+      message: 'אופס, לא בחרת עדיין חבילה. רוצה להוסיף חבילה חדשה?',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: "אה! אני רוצה להוסיף חבילה",
+      rejectLabel: "...לא:-) להמשיך להסתכל",
+      accept: () => { this.router.navigate(['/']); },
+      reject: () => { this.router.navigate(['/gifts']); }
+    });
+    return;
+  }
 
+  const existingPackage = userPackages.find((pack: any) => Number(pack.emptyQuantity) > 0);
+
+  if (existingPackage) {
+    if (!existingPackage.cards) {
+      existingPackage.cards = [];
+    }
+
+    existingPackage.cards.push(product);
+    existingPackage.emptyQuantity = Number(existingPackage.emptyQuantity) - 1;
+
+    this.cookieService.set(cookieKey, JSON.stringify(userPackages), { path: '/' });
+    
+    this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה לחבילה שלך' });
+    this.cdr.detectChanges();
+  } else {
+    this.confirmationService.confirm({
+      message: '?אופס, נגמרו לך הכרטיסים הריקים בחבילות שבחרת. רוצה להוסיף חבילה חדשה',
+      header: 'הכרטיסים בחבילות אזלו',
+      icon: 'pi pi-exclamation-triangle',
+      acceptLabel: "אה! אני רוצה להוסיף חבילה",
+      rejectLabel: "...לא:-) להמשיך להסתכל",
+      accept: () => { this.router.navigate(['/']); },
+      reject: () => { this.router.navigate(['/gifts']); }
+    });
+  }
+}
   showGiftChild() {
     this.ref = this.dialogService.open(GiftForm, {
       width: '450px',
@@ -163,16 +208,13 @@ export class GetAllGifts implements OnInit {
       },
       baseZIndex: 10000,
     });
+
     this.ref?.onClose.subscribe((result) => {
       if (result) {
-
         this.giftService.addGift(result, result.picture).subscribe({
           next: (newGift) => {
-            this.gifts.push(newGift);
-            this.gifts = [...this.gifts];
-            this.cdr.detectChanges();
-
-            this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'התורם נוסף למערכת' });
+            this.gifts = [...this.gifts, newGift];
+            this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה למערכת' });
             this.cdr.detectChanges();
           },
           error: (err) => {
@@ -181,48 +223,22 @@ export class GetAllGifts implements OnInit {
         });
       }
     });
-    console.log('gifts: ', this.gifts);
-
   }
 
   showDetails(product: any) {
-    console.log(product.donor);
-    
     this.dialogService.open(GiftDetailsDialog, {
       showHeader: false,
       width: '900px',
-      height: 'auto',
-      style: {
-        'max-width': '95vw', 'background': '#1a162e', 'border': 'none', borderRadius: '10px', 'border-radius': '0'
-      },
+      style: { 'max-width': '95vw', 'border-radius': '10px' },
       contentStyle: {
         'max-height': '90vh',
         'overflow-y': 'auto',
         'padding': '0',
         'background': '#1a162e',
-        'border': 'none',
-        'outline': 'none',
-        'border-radius': '0'
       },
       styleClass: 'premium-dialog',
       data: { gift: product, donor: product.donor },
       baseZIndex: 10000,
     });
   }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

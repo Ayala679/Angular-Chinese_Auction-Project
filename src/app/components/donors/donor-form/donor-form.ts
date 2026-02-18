@@ -77,7 +77,7 @@ export class DonorForm implements OnInit {
       first_name: ['', [Validators.required, Validators.minLength(2)]],
       last_name: ['', [Validators.required, Validators.minLength(2)]],
       phone: ['', [Validators.pattern('^\\+?[0-9]\\d{1,14}$')]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['123456'],
       is_publish: [false],
       company_name: [''],
       company_description: [''],

@@ -96,3 +96,38 @@
     <h2 class="text-white mt-4 font-bold text-3xl">מבצע הגרלות...</h2>
 </div>
 }
+
+<p-dialog header="אישור ביצוע הגרלה" [(visible)]="displayConfirmLottery" [modal]="true" [style]="{width: '350px'}" [draggable]="false" [resizable]="false">
+    <div class="flex flex-column align-items-center justify-content-center py-4">
+        <i class="pi pi-exclamation-triangle text-orange-500 text-5xl mb-3"></i>
+        <p class="m-0 text-center font-bold text-xl">האם אתה בטוח שברצונך להריץ את כל ההגרלות כעת?</p>
+        <p class="text-sm text-white-alpha-60 mt-2">פעולה זו סופית ולא ניתן לבטלה.</p>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="flex justify-content-center gap-2">
+            <p-button label="ביטול" icon="pi pi-times" (click)="displayConfirmLottery = false" [text]="true" styleClass="text-white" />
+            <p-button label="כן, בצע הגרלה" icon="pi pi-check" (click)="runLottery()" styleClass="p-button-warning" [rounded]="true" />
+        </div>
+    </ng-template>
+</p-dialog>
+
+<p-dialog header="תוצאות ההגרלה הגדולה ✨" [(visible)]="displayLotteryResults" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false" styleClass="lottery-results-dialog">
+    <div class="results-container max-h-30rem overflow-y-auto">
+        <div *ngFor="let res of lotteryResults" class="result-item flex align-items-center justify-content-between p-3 mb-2 border-round-xl bg-white-alpha-5 border-1 border-white-alpha-10">
+            <div class="flex align-items-center gap-3">
+                <i [class]="res.icon + ' ' + res.severity" style="font-size: 1.5rem;"></i>
+                <div class="flex flex-column">
+                    <span class="font-bold text-white">{{ res.name }}</span>
+                    <span class="text-xs text-white-alpha-60">{{ res.message }}</span>
+                </div>
+            </div>
+            <div class="winner-info text-right">
+                <span *ngIf="res.winner" class="text-orange-500 font-black">זוכה: {{ res.winner }}</span>
+                <span *ngIf="!res.winner" class="text-red-400 text-sm">אין זוכה</span>
+            </div>
+        </div>
+    </div>
+    <ng-template pTemplate="footer">
+        <p-button label="סגור" icon="pi pi-times" (click)="displayLotteryResults = false" [rounded]="true" styleClass="w-full p-button-secondary" />
+    </ng-template>
+</p-dialog>

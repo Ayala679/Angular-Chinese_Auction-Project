@@ -1,139 +1,120 @@
 <p-toast />
 <p-confirmDialog />
 
-<div class="card" dir="rtl">
-    <div class="mb-4">
-        <button class="add-donor-button" (click)="showChild()">
+<div class="donors-wrapper" dir="rtl">
+    <div class="donors-header">
+        <h2 class="section-title">Our Generous Donors 🎁</h2>
+        <p class="section-subtitle">Meet the amazing supporters behind our success</p>
+        <button class="add-donor-btn" (click)="showChild()">
             <i class="pi pi-user-plus mr-2"></i>
             הוספת תורם חדש
         </button>
     </div>
 
-    <div class="flex gap-4 direction-rtl align-items-start">
-        <div class="flex-1">
+    <div class="donors-content">
+        <div class="donors-main">
             <div class="donor-list-container">
-                <p-table [value]="filteredDonorsList" dataKey="id" [rows]="10" [paginator]="true" [rowHover]="true"
-                    [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand($event)" (onRowCollapse)="onRowCollapse($event)"
-                    (sortFunction)="customSort($event)">
-                <ng-template #header>
-                    <tr>
-                        <th style="width: 5rem"></th>
-                        <th>לוגו</th>
-                        <th pSortableColumn="email"> אימייל <p-sortIcon field="email" /></th>
-                        <th pSortableColumn="first_name">שם פרטי <p-sortIcon field="first_name" /></th>
-                        <th pSortableColumn="last_name">שם משפחה <p-sortIcon field="last_name" /></th>
-                        <th>טלפון</th>
-                        <th>שם חברה</th>
-                        <th>תיאור חברה</th>
-                        <th>סטטוס</th>
-                        <th>עדכון/מחיקה</th>
-                    </tr>
-                </ng-template>
-
-                <ng-template #body let-d let-expanded="expanded">
-                    <tr>
-                        <td>
-                            <p-button type="button" pRipple [pRowToggler]="d" [text]="true" severity="secondary"
-                                [rounded]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
-                        </td>
-                        <td>
-                            @if(d.companyPicture && d.companyPicture !== 'string' && d.companyPicture !== 'undefined' &&
-                            d.companyPicture !== 'null'){
-                            <img [src]="IMAGE_BASE_URL + d.companyPicture" style="width: 50px" class="shadow-2 rounded" />
-                            }
-                            @else{
-                            <p-tag severity="secondary" value="אין לוגו"></p-tag>}
-                        </td>
-                        <td>{{ d.email }}</td>
-                        <td>{{ d.firstName }}</td>
-                        <td>{{ d.lastName }}</td>
-                        <td>{{ d.phone }}</td>
-                        <td>{{ d.companyName }}</td>
-                        <td>{{ d.companyDescription }}</td>
-                        <td>
-                            <p-tag [severity]="d.isPublish ? 'success' : 'warn'"
-                                [value]="d.isPublish ? 'מפרסם' : 'לא מפרסם'" />
-                        </td>
-                        <td>
-                            <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" class="mr-2"
-                                (onClick)="editDonor(d)" />
-                            <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger"
-                                (onClick)="deleteDonor(d)" />
-                        </td>
-                    </tr>
-                </ng-template>
-                <ng-template #expandedrow let-donor>
-                    <tr>
-                        <td colspan="12">
-                            <div class="p-4">
-                                <h4> Gifts donated by {{ donor.firstName }}</h4>
-                                <p-button label="הוספת מתנה חדשה" icon="pi pi-user-plus" class="p-button-success"
-                                    (onClick)="showGiftChild(donor)" />
-                                <p-table [value]="donor.gifts" dataKey="id">
-                                    <ng-template #header>
+                <p-table [value]="filteredDonorsList" dataKey="id" [rows]="5" [paginator]="true" [rowHover]="false"
+                    [expandedRowKeys]="expandedRows" (onRowExpand)="onRowExpand($event)"
+                    (onRowCollapse)="onRowCollapse($event)" (sortFunction)="customSort($event)"
+                    paginatorTemplate="FirstPageLink PreviousPageLink PageLinks NextPageLink LastPageLink"
+                    [showCurrentPageReport]="true"
+                    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} donors">
+                    <ng-template #header>
                         <tr>
-                            <th pSortableColumn="name">
-                                <div class="flex items-center gap-2">
-                                    Name
-                                    <p-sortIcon field="name" />
+                            <th style="width: 5rem"></th>
+                            <th>לוגו</th>
+                            <th pSortableColumn="email"> אימייל <p-sortIcon field="email" /></th>
+                            <th pSortableColumn="first_name">שם פרטי <p-sortIcon field="first_name" /></th>
+                            <th pSortableColumn="last_name">שם משפחה <p-sortIcon field="last_name" /></th>
+                            <th>טלפון</th>
+                            <th>שם חברה</th>
+                            <th>תיאור חברה</th>
+                            <th>סטטוס</th>
+                            <th>עדכון/מחיקה</th>
+                        </tr>
+                    </ng-template>
+
+                    <ng-template #body let-d let-expanded="expanded">
+                        <tr class="row-scaling-effect">
+                            <td>
+                                <p-button type="button" pRipple [pRowToggler]="d" [text]="true" severity="secondary"
+                                    [rounded]="true" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'" />
+                            </td>
+                            <td>
+                                @if(d.company_picture && d.company_picture !== 'string' && d.company_picture !==
+                                'undefined' &&
+                                d.company_picture !== 'null'){
+                                <img [src]="IMAGE_BASE_URL + d.company_picture" style="width: 50px"
+                                    class="shadow-2 rounded" />
+                                }
+                                @else{
+                                <p-tag severity="secondary" value="אין לוגו"></p-tag>}
+                            </td>
+                            <td>{{ d.email }}</td>
+                            <td>{{ d.first_name }}</td>
+                            <td>{{ d.last_name }}</td>
+                            <td>{{ d.phone }}</td>
+                            <td>{{ d.company_name }}</td>
+                            <td>{{ d.company_description }}</td>
+                            <td>
+                                <p-tag [severity]="d.is_publish ? 'success' : 'warn'"
+                                    [value]="d.is_publish ? 'מפרסם' : 'לא מפרסם'" />
+                            </td>
+                            <td>
+                                <div class="flex gap-2 horizontal-actions">
+                                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true"
+                                        (onClick)="editDonor(d)" class="orange-btn-fix" />
+                                    <p-button icon="pi pi-trash" [rounded]="true" [outlined]="true" severity="danger"
+                                        (onClick)="deleteDonor(d)" class="orange-btn-fix" />
                                 </div>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template #expandedrow let-donor>
+                        <tr>
+                            <td colspan="12">
+                                <div class="p-4 gifts-expanded-container custom-gifts-border">
+                                    <h4 class="gifts-section-title"> 💝 Gifts donated by {{ donor.first_name }}</h4>
+                                    <p-button label="הוספת מתנה חדשה" icon="pi pi-user-plus" class="add-gift-btn-final"
+                                        (onClick)="showGiftChild(donor)" />
+                                    <div class="gifts-table-wrapper">
+                                        <p-table [value]="donor.gifts" dataKey="id" styleClass="gifts-table">
+                                            <ng-template #header>
+                        <tr>
+                            <th pSortableColumn="name">Name <p-sortIcon field="name" /></th>
+                            <th pSortableColumn="description">Description <p-sortIcon field="description" /></th>
+                            <th pSortableColumn="details">Details <p-sortIcon field="details" /></th>
+                            <th pSortableColumn="purchase_quantity">Quantity <p-sortIcon field="purchase_quantity" />
                             </th>
-                            <th pSortableColumn="description">
-                                <div class="flex items-center gap-2">
-                                    Description
-                                    <p-sortIcon field="description" />
-                                </div>
-                            </th>
-                            <th pSortableColumn="details">
-                                <div class="flex items-center gap-2">
-                                    Details
-                                    <p-sortIcon field="details" />
-                                </div>
-                            </th>
-                            <th pSortableColumn="purchaseQuantity">
-                                <div class="flex items-center gap-2">
-                                    Purchase Quantity
-                                    <p-sortIcon field="purchaseQuantity" />
-                                </div>
-                            </th>
-                            <th pSortableColumn="value">
-                                <div class="flex items-center gap-2">
-                                    Value
-                                    <p-sortIcon field="value" />
-                                </div>
-                            </th>
-                            <th pSortableColumn="picture">
-                                <div class="flex items-center gap-2">
-                                    Picture
-                                    <p-sortIcon field="picture" />
-                                </div>
-                            </th>
+                            <th pSortableColumn="value">Value <p-sortIcon field="value" /></th>
+                            <th pSortableColumn="picture">Picture <p-sortIcon field="picture" /></th>
                             <th></th>
-                            <th style="width: 4rem"></th>
                         </tr>
                     </ng-template>
                     <ng-template #body let-gift>
-                        <tr>
+                        <tr class="gifts-row row-scaling-effect">
                             <td>{{ gift.name }}</td>
                             <td>{{ gift.description }}</td>
                             <td>{{ gift.details }}</td>
-                            <td>{{ gift.purchaseQuantity}}</td>
+                            <td>{{ gift.purchase_quantity}}</td>
                             <td>{{ gift.value | currency: 'ILS' }}</td>
                             <td>
                                 @if(gift.picture && gift.picture !== 'string' && gift.picture !== 'undefined' &&
                                 gift.picture !== 'null'){
-                                <img [src]="IMAGE_BASE_URL_GIFT + gift.picture" style="width: 50px" class="shadow-2 rounded" />
+                                <img [src]="IMAGE_BASE_URL_GIFT + gift.picture" style="width: 50px"
+                                    class="shadow-2 rounded" />
                                 }
                                 @else{
                                 <p-tag severity="secondary" value="אין תמונה"></p-tag>}
                             </td>
                             <td>
-                                <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true" class="mr-2"
-                                    (onClick)="editGift(gift)" />
+                                <div class="flex horizontal-actions">
+                                    <p-button icon="pi pi-pencil" [rounded]="true" [outlined]="true"
+                                        class="mr-2 orange-btn-fix" (onClick)="editGift(gift)" />
+                                </div>
                             </td>
-                            <td>
-                                <p-button type="button" icon="pi pi-search" />
-                            </td>
+
                         </tr>
                     </ng-template>
                     <ng-template #emptymessage>
@@ -142,112 +123,64 @@
                         </tr>
                     </ng-template>
                 </p-table>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
+            </div>
         </div>
+        </td>
+        </tr>
+        </ng-template>
+        </p-table>
     </div>
+</div>
 
-        <!-- Filter Button and Sidebar on the right -->
-        <div class="flex flex-column gap-3">
-            <!-- Toggle Filter Button (visible when panel is closed) -->
-            @if(!isFilterOpen) {
-                <button class="filter-button" (click)="toggleFilterPanel()">
-                    <i class="pi pi-filter mr-2"></i>
-                    סנן
-                </button>
-            }
+<div class="filter-panel-container">
+    @if(!isFilterOpen) {
+    <button class="filter-toggle-btn" (click)="toggleFilterPanel()">
+        <i class="pi pi-filter mr-2"></i>
+        סנן
+    </button>
+    }
 
-            @if(isFilterOpen) {
-                <div class="filter-sidebar">
-                <div class="flex justify-content-between align-items-center mb-4">
-                    <h5 class="filter-header-title">סינון</h5>
-                    <p-button 
-                        icon="pi pi-times" 
-                        [text]="true"
-                        severity="secondary"
-                        (onClick)="closeFilterPanel()"
-                        class="p-button-sm">
-                    </p-button>
+    @if(isFilterOpen) {
+    <div class="filter-sidebar">
+        <div class="filter-header">
+            <h5 class="filter-title">סינון תורמים</h5>
+            <p-button icon="pi pi-times" [text]="true" severity="secondary" (onClick)="closeFilterPanel()"
+                class="p-button-sm"></p-button>
+        </div>
+
+        <div class="filter-options">
+            <div class="filter-option-group deep-filter-design">
+                <div class="filter-box-item" [class.active]="filterType === 'name'" (click)="setFilterType('name')">
+                    <p-radioButton name="filterType" value="name" [(ngModel)]="filterType"
+                        (onClick)="setFilterType('name')"></p-radioButton>
+                    <label>חיפוש לפי שם</label>
                 </div>
-
-            <div class="flex flex-column gap-3 mb-4">
-                <div class="flex align-items-center cursor-pointer gap-2" (click)="setFilterType('name')">
-                    <p-radioButton 
-                        name="filterType" 
-                        value="name" 
-                        [(ngModel)]="filterType"
-                        (onClick)="setFilterType('name')"
-                        label="חיפוש לפי שם"
-                        labelPosition="right">
-                    </p-radioButton>
-                    <span class="radio-label-text">חיפוש לפי שם</span>
+                <div class="filter-box-item" [class.active]="filterType === 'email'" (click)="setFilterType('email')">
+                    <p-radioButton name="filterType" value="email" [(ngModel)]="filterType"
+                        (onClick)="setFilterType('email')"></p-radioButton>
+                    <label>חיפוש לפי אימייל</label>
                 </div>
-
-                <div class="flex align-items-center cursor-pointer gap-2" (click)="setFilterType('email')">
-                    <p-radioButton 
-                        name="filterType" 
-                        value="email" 
-                        [(ngModel)]="filterType"
-                        (onClick)="setFilterType('email')"
-                        label="חיפוש לפי אימייל"
-                        labelPosition="right">
-                    </p-radioButton>
-                    <span class="radio-label-text">חיפוש לפי אימייל</span>
-                </div>
-
-                <div class="flex align-items-center cursor-pointer gap-2" (click)="setFilterType('gift')">
-                    <p-radioButton 
-                        name="filterType" 
-                        value="gift" 
-                        [(ngModel)]="filterType"
-                        (onClick)="setFilterType('gift')"
-                        label="חיפוש לפי מתנה"
-                        labelPosition="right">
-                    </p-radioButton>
-                    <span class="radio-label-text">חיפוש לפי מתנה</span>
+                <div class="filter-box-item" [class.active]="filterType === 'gift'" (click)="setFilterType('gift')">
+                    <p-radioButton name="filterType" value="gift" [(ngModel)]="filterType"
+                        (onClick)="setFilterType('gift')"></p-radioButton>
+                    <label>חיפוש לפי מתנה</label>
                 </div>
             </div>
 
             @if(filterType) {
-                <div class="flex flex-column gap-2">
-                    <label class="filter-label">הקלד ערך חיפוש:</label>
-                    <input 
-                        pInputText 
-                        type="text" 
-                        placeholder="הקלד כאן..."
-                        [(ngModel)]="filterText"
-                        (keyup.enter)="onFilterChange()"
-                        class="filter-input" />
-                    
-                    <div class="flex gap-2 justify-content-center">
-                        <p-button 
-                            icon="pi pi-search" 
-                            label="חפש" 
-                            (onClick)="onFilterChange()"
-                            severity="info"
-                            class="p-button-sm flex-1">
-                        </p-button>
-                        <p-button 
-                            icon="pi pi-times" 
-                            label="נקה"
-                            (onClick)="clearFilter()"
-                            severity="secondary"
-                            class="p-button-sm flex-1">
-                        </p-button>               
-                    </div>
+            <div class="filter-input-section">
+                <label class="filter-label">הקלד ערך חיפוש:</label>
+                <input pInputText type="text" placeholder="הקלד כאן..." [(ngModel)]="filterText"
+                    (keyup.enter)="onFilterChange()" class="filter-input-styled" />
+                <div class="filter-actions-final">
+                    <button class="apply-filter-btn" (click)="onFilterChange()">חפש</button>
+                    <button class="clear-filter-btn" (click)="clearFilter()">נקה</button>
                 </div>
-            }
-
-            <!-- Info text when no filter selected -->
-            @if(!filterType) {
-                <p class="filter-info-text text-center m-0">
-                    בחר סוג סינון כדי להתחיל בחיפוש
-                </p>
-            }
             </div>
-        }
+            }
+        </div>
     </div>
+    }
+</div>
+</div>
 </div>

@@ -28,19 +28,19 @@ export class DonorService {
     const token = this.cookieService.get('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     const formData = new FormData();
-    formData.append('email', donorData.email || '');
-    formData.append('password', donorData.password || '');
-    formData.append('firstName', donorData.first_name || '');
-    formData.append('lastName', donorData.last_name || '');
-    formData.append('phone', donorData.phone || '');
-    formData.append('companyName', donorData.company_name || '');
-    formData.append('companyDescription', donorData.company_description || '');
-    formData.append('isPublish', String(donorData.is_publish));
+    formData.append('Email', donorData.email || '');
+    formData.append('Password', donorData.password || '');
+    formData.append('First_name', donorData.first_name || '');
+    formData.append('Last_name', donorData.last_name || '');
+    formData.append('Phone', donorData.phone || '');
+    formData.append('Company_name', donorData.company_name || '');
+    formData.append('Company_description', donorData.company_description || '');
+    formData.append('Is_publish', String(donorData.is_publish));
     if (imageFile) {
       formData.append('imageFile', imageFile);
     }
     else if (donorData.company_picture) {
-      formData.append('companyPicture', donorData.company_picture);
+      formData.append('Company_picture', donorData.company_picture);
     }
     return this.http.post<ManagerGetDonor>(`${this.baseUrl}`, formData, { headers });
   }
@@ -51,12 +51,12 @@ export class DonorService {
     const formData = new FormData();
     if (donorData.email) formData.append('email', donorData.email);
     if (donorData.password) formData.append('password', donorData.password);
-    if (donorData.first_name) formData.append('firstName', donorData.first_name);
-    if (donorData.last_name) formData.append('lastName', donorData.last_name);
+    if (donorData.first_name) formData.append('first_name', donorData.first_name);
+    if (donorData.last_name) formData.append('last_name', donorData.last_name);
     if (donorData.phone) formData.append('phone', donorData.phone);
-    if (donorData.company_name) formData.append('companyName', donorData.company_name);
-    if (donorData.company_description) formData.append('companyDescription', donorData.company_description);
-    formData.append('isPublish', String(donorData.is_publish ?? false));
+    if (donorData.company_name) formData.append('company_name', donorData.company_name);
+    if (donorData.company_description) formData.append('company_description', donorData.company_description);
+    formData.append('is_publish', String(donorData.is_publish ?? false));
     if (imageFile) {
       formData.append('imageFile', imageFile);
     }

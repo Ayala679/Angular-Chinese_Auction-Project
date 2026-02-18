@@ -16,8 +16,8 @@ export class GetGiftDto {
     details?: string;
     picture!: string;
     value!: number;
-    donor_Id!: number;
-    category_Id!: string;
+    donorId!: number;
+    categoryId!: string;
     isLottery: boolean = false;
     purchaseQuantity!: number;
 }
