@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { Category, GetCategory } from '../models/category.model';
 import { Observable } from 'rxjs';
 
@@ -9,7 +8,7 @@ import { Observable } from 'rxjs';
 })
 export class CategoryService {
   baseUrl: string = 'https://localhost:7031/api/Category';
-  constructor(private http: HttpClient, private cookieService: CookieService) { }
+  constructor(private http: HttpClient) { }
 
   getCategories(): Observable<GetCategory[]> {
     return this.http.get<GetCategory[]>(`${this.baseUrl}`);
@@ -20,7 +19,7 @@ export class CategoryService {
   }
 
   addCategory(categoryData: Category, imageFile: File | null): Observable<GetCategory> {
-    const token = this.cookieService.get('authToken');
+    const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     const formData = new FormData();
     formData.append('name', categoryData.name);
@@ -32,7 +31,7 @@ export class CategoryService {
   }
 
   updateCategory(id: number, categoryData: Partial<Category>, imageFile: File | null): Observable<GetCategory> {
-    const token = this.cookieService.get('authToken');
+    const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     const formData = new FormData();
     if (categoryData.name) formData.append('name', categoryData.name);
@@ -44,7 +43,7 @@ export class CategoryService {
   }
 
   deleteCategory(id: number): Observable<string> {
-    const token = this.cookieService.get('authToken');
+    const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.delete<string>(`${this.baseUrl}/${id}`, { headers, responseType: 'text' as 'json' });
   }

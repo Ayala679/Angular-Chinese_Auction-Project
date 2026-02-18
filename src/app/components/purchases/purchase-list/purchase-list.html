@@ -1,0 +1,73 @@
+<p-toast></p-toast>
+
+<div class="purchases-wrapper" dir="rtl">
+    <div class="purchases-header">
+        <h2 class="section-title">רכישות 🎁</h2>
+        <p class="section-subtitle">כל הרכישות</p>
+    </div>
+
+    <div *ngIf="isLoading; else loaded">
+        <div class="loading-container">
+            <p-progressSpinner strokeWidth="4"></p-progressSpinner>
+            <p class="loading-text">טוען רכישות...</p>
+        </div>
+    </div>
+
+    <ng-template #loaded>
+        <div class="purchases-content">
+            <div class="purchases-list-container">
+                <div *ngIf="purchaseRows.length === 0; else table">
+                    <div class="empty-state">
+                        <i class="pi pi-inbox"></i>
+                        <p>אין רכישות להצגה</p>
+                    </div>
+                </div>
+
+                <ng-template #table>
+                    <p-table [value]="purchaseRows" dataKey="purchase.id" [rows]="10" [paginator]="true" [rowHover]="true"
+                                     paginatorTemplate="FirstPageLink PreviousPageLink PageLinks NextPageLink LastPageLink"
+                                     [showCurrentPageReport]="true"
+                                     [totalRecords]="purchaseRows.length"
+                                     currentPageReportTemplate="מוצגות {first} עד {last} מתוך {totalRecords} רכישות">
+
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>שם הרוכש</th>
+                                <th>שם המתנה</th>
+                                <th>תיאור המתנה</th>
+                                <th>שווי המתנה</th>
+                                <th>חבילה</th>
+                                <th>סטטוס זכייה</th>
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-row>
+                            <tr class="row-scaling-effect">
+                                <td>{{ (row.user?.first_name || '') + ' ' + (row.user?.last_name || '') }}</td>
+                                <td>{{ row.gift?.name || '-' }}</td>
+                                <td class="gift-desc">{{ row.gift?.description || '-' }}</td>
+                                <td>{{ row.gift?.value != null ? (row.gift?.value | currency:'ILS') : '-' }}</td>
+                                <td>{{ row.package?.name || '-' }}</td>
+                                <td>
+                                    <p-tag [severity]="getWinSeverity(row.purchase.is_Won)" [value]="getWinStatus(row.purchase.is_Won)" />
+                                </td>
+
+                            </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="emptymessage">
+                            <tr>
+                                <td colspan="9" class="empty-row">
+                                    <div class="empty-message">
+                                        <i class="pi pi-inbox"></i>
+                                        <p>אין רכישות להצגה</p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                </ng-template>
+            </div>
+        </div>
+    </ng-template>
+</div>

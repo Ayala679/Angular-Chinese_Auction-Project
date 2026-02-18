@@ -9,7 +9,6 @@ import { Toast, ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { RouterModule } from '@angular/router';
 import { PackageService } from '../../services/package-service';
-import { CookieService } from 'ngx-cookie-service';
 import { PurchaseService } from '../../services/purchase-service';
 import { forkJoin } from 'rxjs';
 import { GiftService } from '../../services/gift-service';
@@ -38,17 +37,16 @@ export class Basket {
   messageService = inject(MessageService);
   router = inject(Router);
   cdr = inject(ChangeDetectorRef);
-  private cookieService = inject(CookieService);
-  cookieData = this.cookieService.get('user') || '[]';
+  cookieData = localStorage.getItem('user') || '[]';
   giftService = inject(GiftService);
   numOfCards: number = 0;
   sellCards: number = 0;
 
   ngOnInit() {
-    this.user = this.cookieService.get('user') || '';
+    this.user = localStorage.getItem('user') || '';
     const parsedUser = this.user && this.user !== 'undefined' && this.user !== '' ? JSON.parse(this.user) : {};
     const userId = parsedUser?.id;
-    const cookieData = userId ? this.cookieService.get(userId) || '[]' : '[]';
+    const cookieData = userId ? localStorage.getItem(userId) || '[]' : '[]';
     this.packages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
 
     this.loadGifts()
@@ -65,7 +63,7 @@ export class Basket {
 
     const parsedUser = this.user && this.user !== 'undefined' && this.user !== '' ? JSON.parse(this.user) : {};
     const userId = parsedUser?.id;
-    this.cookieData = userId ? this.cookieService.get(userId) || '[]' : '[]';
+    this.cookieData = userId ? localStorage.getItem(userId) || '[]' : '[]';
 
     this.packages = (this.cookieData && this.cookieData !== 'undefined' && this.cookieData !== '') ? JSON.parse(this.cookieData) : [];
 
@@ -96,9 +94,9 @@ export class Basket {
                   // כאן אנחנו מזריקים את הכמות שחושבה קודם לתוך האובייקט שנשלח ל-HTML
                   user_count: quantityMap[giftIdStr] || 0
                 };
-                
+
               });
-                console.log(this.uniquePackages);
+            console.log(this.uniquePackages);
 
             // חשוב: לעדכן את Angular שהנתונים השתנו
             this.cdr.detectChanges();
@@ -120,11 +118,23 @@ export class Basket {
     this.cdr.detectChanges();
   }
 
+  removeAll(id: number) {
+    const card = this.allCards.find(c => Number(c.id) === Number(id));
+
+    if (card && card.user_count > 0) {
+      const count = card.user_count;
+
+      for (let i = 0; i < count; i++) {
+        this.removeFromBasket(id);
+      }
+    }
+  }
+
   removeFromBasket(id: number) {
     const parsedUser = this.user && this.user !== 'undefined' && this.user !== '' ? JSON.parse(this.user) : {};
     const userId = parsedUser?.id;
     if (!userId) return;
-    const cookieData = this.cookieService.get(userId) || '[]';
+    const cookieData = localStorage.getItem(userId) || '[]';
     let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
     const packageWithCard = [...userPackages].reverse().find((pack: any) =>
       pack.cards.some((card: any) => Number(card.id) === Number(id))
@@ -135,7 +145,7 @@ export class Basket {
       if (cardIndex !== -1) {
         packageWithCard.cards.splice(cardIndex, 1);
         packageWithCard.emptyQuantity += 1;
-        this.cookieService.set(userId, JSON.stringify(userPackages), { path: '/' });
+        localStorage.setItem(userId, JSON.stringify(userPackages));
         this.loadGifts();
         this.messageService.add({ severity: 'warn', summary: 'הצלחה', detail: 'המתנה הוסרה מהחבילה שלך' });
       }
@@ -157,13 +167,13 @@ export class Basket {
     }
 
     // עדכון ה-user מהקוקי כל פעם
-    this.user = this.cookieService.get('user') || '';
+    this.user = localStorage.getItem('user') || '';
     const parsedUserData = this.user && this.user !== 'undefined' && this.user !== '' ? JSON.parse(this.user) : {};
     const userId = parsedUserData?.id;
     if (!userId) return;
 
     // טעינה טרייה של החבילות מהקוקי
-    const cookieData = this.cookieService.get(userId) || '[]';
+    const cookieData = localStorage.getItem(userId) || '[]';
     let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
 
     if (userPackages.length === 0) {
@@ -194,7 +204,7 @@ export class Basket {
       existingPackage.emptyQuantity -= 1;
 
       // שמירה ועדכון
-      this.cookieService.set(userId, JSON.stringify(userPackages), { path: '/' });
+      localStorage.setItem(userId, JSON.stringify(userPackages));
 
       // רענון קריטי של משתני המחלקה לפני קריאה ל-loadGifts
       this.packages = userPackages;
@@ -233,13 +243,13 @@ export class Basket {
         // כאן תוכל להוסיף את הלוגיקה לביצוע התשלום בפועל, למשל קריאה ל-API של התשלום
         this.packages.forEach((pack: any) => {
           CardsList = pack.cards.map((card: any) => {
-            return { giftId: card.id, userId: JSON.parse(this.user).id, packageId: pack.id } as CreatePurchase;
+            return { gift_Id: card.id, user_Id: JSON.parse(this.user).id, package_Id: Number(pack.id) } as CreatePurchase;
           })
           this.purchaseService.addPurchase(CardsList).subscribe({
             next: () => {
 
               this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'התשלום בוצע בהצלחה!' });
-              this.cookieService.delete(this.user ? JSON.parse(this.user).id : '');
+              localStorage.removeItem(this.user ? JSON.parse(this.user).id : '');
               this.confirmationService.confirm({
                 header: 'רוצה להמשיך לקניות?',
                 message: 'התשלום בוצע בהצלחה! האם ברצונך להמשיך לקניות?',
@@ -249,8 +259,11 @@ export class Basket {
 
                 accept: () => {
                   this.router.navigate(['/']);
+
                 },
                 reject: () => {
+                  window.location.reload();
+
                   this.router.navigate(['/my-gifts']);
                 },
               });

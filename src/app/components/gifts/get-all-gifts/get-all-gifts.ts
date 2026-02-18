@@ -12,7 +12,6 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { MessageService, ConfirmationService } from 'primeng/api';
 import { RouterModule } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 import { GiftDetailsDialog } from '../gift-details-dialog/gift-details-dialog';
 
 @Component({
@@ -34,8 +33,7 @@ export class GetAllGifts implements OnInit {
   dialogService = inject(DialogService);
   ref: DynamicDialogRef | null = null;
   private confirmationService = inject(ConfirmationService);
-  private cookieService = inject(CookieService);
-  user: string = this.cookieService.get('user') || '';
+  user: string = localStorage.getItem('user') || '';
   role: string = '1';
   router = inject(Router);
 
@@ -153,7 +151,7 @@ addToCart(product: any) {
   if (!userId) return;
 
   const cookieKey = userId.toString();
-  const cookieData = this.cookieService.get(cookieKey) || '[]';
+  const cookieData = localStorage.getItem(cookieKey) || '[]';
   let userPackages = (cookieData && cookieData !== 'undefined' && cookieData !== '') ? JSON.parse(cookieData) : [];
 
   if (userPackages.length === 0) {
@@ -179,7 +177,7 @@ addToCart(product: any) {
     existingPackage.cards.push(product);
     existingPackage.emptyQuantity = Number(existingPackage.emptyQuantity) - 1;
 
-    this.cookieService.set(cookieKey, JSON.stringify(userPackages), { path: '/' });
+    localStorage.setItem(cookieKey, JSON.stringify(userPackages));
     
     this.messageService.add({ severity: 'success', summary: 'הצלחה', detail: 'המתנה נוספה לחבילה שלך' });
     this.cdr.detectChanges();

@@ -1,7 +1,7 @@
 export class CreatePurchase {
-    giftId!: number;
-    userId!: number;
-    packageId!: number;
+    gift_Id!: number;
+    user_Id!: number;
+    package_Id!: number;
 }
 
 export class GetPurchase {

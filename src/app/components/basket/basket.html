@@ -28,7 +28,7 @@
                             <div class="item-info-column flex-1 w-full">
                                 <div class="flex justify-content-between align-items-start">
                                     <h3 class="item-title m-0 text-2xl font-black text-white">{{ item.name }}</h3>
-                                    <p-button (onClick)="removeFromBasket(item.id)" icon="pi pi-trash" [rounded]="true"
+                                    <p-button (onClick)="removeAll(item.id)" icon="pi pi-trash" [rounded]="true"
                                         [text]="true" severity="danger" styleClass="item-action-btn"></p-button>
                                 </div>
                                 <p class="item-description my-2 text-white-alpha-90 line-height-3">{{ item.description

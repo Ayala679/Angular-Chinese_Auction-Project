@@ -1,5 +1,5 @@
 <nav class="navbar m-3 border-round-3xl px-4 md:px-6 h-5rem flex align-items-center sticky top-0"
-     style="direction: rtl;">
+    style="direction: rtl;">
     <div class="nav-container w-full flex align-items-center justify-content-between">
 
         <p-button icon="pi pi-bars" [text]="true" [rounded]="true" class="md:hidden ml-2"
@@ -16,12 +16,13 @@
 
                 <div class="mega-menu absolute top-100 right-0 z-5 shadow-8 border-round-2xl p-4 w-30rem"
                     *ngIf="showMenu">
-                    
+
                     <div class="grid flex-row-reverse">
                         <div class="col-4 p-2" *ngFor="let item of categories | slice:0:3; let i = index">
                             <div (click)="navigateToGifts(item.id)"
                                 class="menu-card flex flex-column align-items-center gap-2 border-1 border-white-alpha-20 hover:border-orange-500 p-3 border-round-xl transition-all">
-                                <div class="image-placeholder relative w-full h-6rem overflow-hidden border-round-xl shadow-4">
+                                <div
+                                    class="image-placeholder relative w-full h-6rem overflow-hidden border-round-xl shadow-4">
                                     <img *ngIf="item.picture" [src]="IMAGE_BASE_URL+item.picture" [alt]="item.name"
                                         class="cat-img w-full h-full object-cover">
                                 </div>
@@ -39,13 +40,20 @@
                     </div>
                 </div>
             </li>
-            
-            <li><a routerLink="/gifts" class="no-underline text-white font-bold hover:text-orange-500 transition-colors">מתנות</a></li>
-            <li><a routerLink="/basket" class="no-underline text-white font-bold hover:text-orange-500 transition-colors">הסל שלי</a></li>
-            
+
+            <li><a routerLink="/gifts"
+                    class="no-underline text-white font-bold hover:text-orange-500 transition-colors">מתנות</a></li>
+            <li><a routerLink="/basket"
+                    class="no-underline text-white font-bold hover:text-orange-500 transition-colors">הסל שלי</a></li>
+                <li><a routerLink="/purchases"
+                    class="no-underline text-white font-bold hover:text-orange-500 transition-colors">רשימת רכישות</a></li>
+
             @if ((authService.user$ | async)?.role === 0){
-                <li><a routerLink="/donors" class="no-underline text-white font-bold hover:text-orange-500 transition-colors">ניהול תורמים</a></li>
-                <li><p-button label="ביצוע הגרלה" (click)="lottery()" [rounded]="true" size="small" styleClass="p-button-warning" /></li>
+            <li><a routerLink="/donors"
+                    class="no-underline text-white font-bold hover:text-orange-500 transition-colors">ניהול תורמים</a>
+            </li>
+            <li><p-button label="ביצוע הגרלה" (click)="lottery()" [rounded]="true" size="small"
+                    styleClass="p-button-warning" /></li>
             }
         </ul>
 
@@ -53,36 +61,39 @@
             <div class="search-container hidden lg:block">
                 <p-iconfield>
                     <p-inputicon class="pi pi-search text-white-alpha-70" />
-                    <input pInputText placeholder="חפש מוצר..." 
-                           class="search-input bg-white-alpha-10 text-white border-round-3xl border-white-alpha-20 w-12rem focus:w-16rem transition-all" />
+                    <input pInputText placeholder="חפש מוצר..."
+                        class="search-input bg-white-alpha-10 text-white border-round-3xl border-white-alpha-20 w-12rem focus:w-16rem transition-all" />
                 </p-iconfield>
             </div>
 
             <div class="user-section relative">
                 @if (authService.user$ | async; as currentUser) {
-                    <div class="user-pill flex align-items-center gap-2 cursor-pointer p-1 pr-3 border-round-3xl bg-white-alpha-10 border-1 border-white-alpha-20 hover:bg-white-alpha-20 transition-all"
-                        (click)="showUserDropdown = !showUserDropdown">
-                        <span class="hidden sm:inline font-bold text-sm text-white">{{ currentUser.first_name }}</span>
-                        <p-avatar [label]="currentUser.first_name[0]" shape="circle"
-                            styleClass="bg-orange-500 text-white font-bold shadow-2"></p-avatar>
-                    </div>
+                <div class="user-pill flex align-items-center gap-2 cursor-pointer p-1 pr-3 border-round-3xl bg-white-alpha-10 border-1 border-white-alpha-20 hover:bg-white-alpha-20 transition-all"
+                    (click)="showUserDropdown = !showUserDropdown">
+                    <span class="hidden sm:inline font-bold text-sm text-white">{{ currentUser.first_name }}</span>
+                    <p-avatar [label]="currentUser.first_name[0]" shape="circle"
+                        styleClass="bg-orange-500 text-white font-bold shadow-2"></p-avatar>
+                </div>
 
-                    <div class="user-dropdown absolute left-0 mt-3 z-5 border-round-xl shadow-8 border-1 border-white-alpha-20 w-12rem p-2"
-                        *ngIf="showUserDropdown" (mouseleave)="showUserDropdown = false">
-                        <ul class="list-none p-0 m-0">
-                            <li class="p-3 hover:bg-white-alpha-10 border-round cursor-pointer text-white flex align-items-center gap-2">
-                                <i class="pi pi-user text-orange-500"></i> פרופיל
-                            </li>
-                            <li class="p-3 hover:bg-red-500 border-round cursor-pointer text-white flex align-items-center gap-2" (click)="onLogout($event)">
-                                <i class="pi pi-sign-out"></i> התנתקות
-                            </li>
-                        </ul>
-                    </div>
+                <div class="user-dropdown absolute left-0 mt-3 z-5 border-round-xl shadow-8 border-1 border-white-alpha-20 w-12rem p-2"
+                    *ngIf="showUserDropdown" (mouseleave)="showUserDropdown = false">
+                    <ul class="list-none p-0 m-0">
+                        <li
+                            class="p-3 hover:bg-white-alpha-10 border-round cursor-pointer text-white flex align-items-center gap-2">
+                            <i class="pi pi-user text-orange-500"></i> פרופיל
+                        </li>
+                        <li class="p-3 hover:bg-red-500 border-round cursor-pointer text-white flex align-items-center gap-2"
+                            (click)="onLogout($event)">
+                            <i class="pi pi-sign-out"></i> התנתקות
+                        </li>
+                    </ul>
+                </div>
                 } @else {
-                    <div class="flex gap-2">
-                        <p-button label="כניסה" routerLink="login" [text]="true" styleClass="text-white font-bold" />
-                        <p-button label="הרשמה" routerLink="register" [rounded]="true" size="small" styleClass="p-button-warning" />
-                    </div>
+                <div class="flex gap-2">
+                    <p-button label="כניסה" routerLink="login" [text]="true" styleClass="text-white font-bold" />
+                    <p-button label="הרשמה" routerLink="register" [rounded]="true" size="small"
+                        styleClass="p-button-warning" />
+                </div>
                 }
             </div>
         </div>
@@ -90,44 +101,68 @@
 </nav>
 
 @if (isLoading) {
-<div class="fixed-full-screen flex flex-column align-items-center justify-content-center" 
-     style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10000; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);">
+<div class="fixed-full-screen">
     <p-progressSpinner strokeWidth="4" />
     <h2 class="text-white mt-4 font-bold text-3xl">מבצע הגרלות...</h2>
 </div>
 }
 
-<p-dialog header="אישור ביצוע הגרלה" [(visible)]="displayConfirmLottery" [modal]="true" [style]="{width: '350px'}" [draggable]="false" [resizable]="false">
-    <div class="flex flex-column align-items-center justify-content-center py-4">
-        <i class="pi pi-exclamation-triangle text-orange-500 text-5xl mb-3"></i>
-        <p class="m-0 text-center font-bold text-xl">האם אתה בטוח שברצונך להריץ את כל ההגרלות כעת?</p>
-        <p class="text-sm text-white-alpha-60 mt-2">פעולה זו סופית ולא ניתן לבטלה.</p>
-    </div>
-    <ng-template pTemplate="footer">
-        <div class="flex justify-content-center gap-2">
-            <p-button label="ביטול" icon="pi pi-times" (click)="displayConfirmLottery = false" [text]="true" styleClass="text-white" />
-            <p-button label="כן, בצע הגרלה" icon="pi pi-check" (click)="runLottery()" styleClass="p-button-warning" [rounded]="true" />
+<p-dialog [(visible)]="displayConfirmLottery" [modal]="true" [closable]="true" [showHeader]="false" appendTo="body"
+    styleClass="lottery-dialog">
+    <div class="flex flex-column align-items-center p-5 text-center" style="min-width: 400px;">
+        <div class="border-circle bg-orange-500 text-white inline-flex justify-content-center align-items-center h-5rem w-5rem -mt-8 shadow-8"
+            style="border: 2px solid rgba(255,255,255,0.2);">
+            <i class="pi pi-star-fill text-4xl"></i>
         </div>
-    </ng-template>
+        <span class="font-bold text-2xl block mb-2 mt-4 text-white">התרגשות באוויר!</span>
+        <p class="mb-4 text-white-alpha-70 px-4">האם אתם מוכנים לגלות מי הזוכים המאושרים?</p>
+        <div class="flex align-items-center justify-content-center gap-3 w-full">
+            <p-button label="כן, בואו נתחיל!" (onClick)="runLottery()" styleClass="p-button-warning w-full"></p-button>
+            <p-button label="ביטול" [text]="true" (onClick)="displayConfirmLottery = false"
+                styleClass="text-white w-full"></p-button>
+        </div>
+    </div>
 </p-dialog>
 
-<p-dialog header="תוצאות ההגרלה הגדולה ✨" [(visible)]="displayLotteryResults" [modal]="true" [style]="{width: '500px'}" [draggable]="false" [resizable]="false" styleClass="lottery-results-dialog">
-    <div class="results-container max-h-30rem overflow-y-auto">
-        <div *ngFor="let res of lotteryResults" class="result-item flex align-items-center justify-content-between p-3 mb-2 border-round-xl bg-white-alpha-5 border-1 border-white-alpha-10">
-            <div class="flex align-items-center gap-3">
-                <i [class]="res.icon + ' ' + res.severity" style="font-size: 1.5rem;"></i>
-                <div class="flex flex-column">
-                    <span class="font-bold text-white">{{ res.name }}</span>
-                    <span class="text-xs text-white-alpha-60">{{ res.message }}</span>
+<p-dialog [(visible)]="displayLotteryResults" [modal]="true" [closable]="true" [showHeader]="false" appendTo="body"
+    styleClass="custom-premium-dialog">
+
+    <div class="lottery-results-wrapper">
+        <div class="floating-trophy">
+            <i class="pi pi-trophy"></i>
+        </div>
+
+        <h2 class="results-title">היכל הזוכים</h2>
+
+        <div class="results-scroll-area custom-scrollbar">
+            <div class="results-list">
+                @for (item of lotteryResults; track item.name) {
+                <div class="result-card">
+                    <div class="result-main">
+                        <div class="gift-icon-box" [class.winner-active]="item.winner">
+                            <i [class]="item.icon"></i>
+                        </div>
+                        <div class="gift-details flex flex-column"> 
+                            <span class="gift-name">{{ item.name }}</span>
+                            
+                            @if (item.winner) {
+                                <span class="winner-name">🏆 הזוכה: {{ item.winner }}</span>
+                            } @else {
+                                <span class="error-msg block mt-1">{{ item.message }}</span> 
+                            }
+                        </div>
+                    </div>
+
+                    <div class="status-indicator" [class.status-success]="item.status === 'הושלם'">
+                        {{ item.status }}
+                    </div>
                 </div>
-            </div>
-            <div class="winner-info text-right">
-                <span *ngIf="res.winner" class="text-orange-500 font-black">זוכה: {{ res.winner }}</span>
-                <span *ngIf="!res.winner" class="text-red-400 text-sm">אין זוכה</span>
+                }
             </div>
         </div>
+
+        <button class="close-results-btn" (click)="displayLotteryResults = false">
+            סגור תוצאות
+        </button>
     </div>
-    <ng-template pTemplate="footer">
-        <p-button label="סגור" icon="pi pi-times" (click)="displayLotteryResults = false" [rounded]="true" styleClass="w-full p-button-secondary" />
-    </ng-template>
 </p-dialog>

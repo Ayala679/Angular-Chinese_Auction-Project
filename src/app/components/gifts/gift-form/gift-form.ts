@@ -92,7 +92,7 @@ export class GiftForm implements OnInit {
     console.log(this.config.data);
     this.initForm();
 
-    if (this.config.data) {
+    if (this.config.data) {      
       this.giftForm.patchValue({
         name: this.config.data.name,
         description: this.config.data.description,

@@ -1,0 +1,268 @@
+:host {
+  --blue-purple-grad: linear-gradient(135deg, #5b21b6 0%, #7c3aed 100%);
+  --blue-purple-accent: #7c3aed;
+  --blue-purple-dark: #5b21b6;
+  --orange-grad: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+  --orange-accent: #f97316;
+  --card-bg: #1a162e;
+  --text-main: #f5f5f5;
+  --text-dim: rgba(255, 255, 255, 0.65);
+  --text-dimmer: rgba(255, 255, 255, 0.5);
+  --border-light: rgba(255, 255, 255, 0.08);
+}
+
+// ========== Main Wrapper ==========
+.purchases-wrapper {
+  width: 100%;
+  min-height: 100vh;
+  background: url('/images/back.jpg') no-repeat center center fixed;
+  background-size: cover;
+  position: relative;
+  padding: 2rem 1rem;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(5, 5, 10, 0.92) 0%, rgba(15, 15, 30, 0.88) 100%);
+    z-index: 0;
+  }
+
+  > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+// ========== Header Section ==========
+.purchases-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  animation: slideInDown 0.6s ease-out;
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-main);
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 1.2px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  }
+
+  .section-subtitle {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    font-weight: 300;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  }
+}
+
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// ========== Content Layout ==========
+.purchases-content {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  margin: 0 auto;
+  max-width: 1400px;
+
+  @media (max-width: 1024px) {
+    flex-direction: column-reverse;
+    gap: 1.5rem;
+  }
+}
+
+// ========== Purchases List Container ==========
+.purchases-list-container {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: none;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: none;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+  animation: fadeInUp 0.5s ease-out;
+}
+
+// ========== Loading State ==========
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  gap: 1rem;
+
+  .loading-text {
+    color: var(--text-dim);
+    font-size: 1rem;
+    margin: 1rem 0 0 0;
+  }
+}
+
+// ========== Empty State ==========
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  gap: 1rem;
+  text-align: center;
+
+  i {
+    font-size: 4rem;
+    color: var(--text-dimmer);
+  }
+
+  p {
+    color: var(--text-dim);
+    font-size: 1.1rem;
+    margin: 0;
+  }
+}
+
+.empty-row {
+  display: flex;
+  justify-content: center;
+}
+
+.empty-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+  text-align: center;
+
+  i {
+    font-size: 3rem;
+    color: var(--text-dimmer);
+  }
+
+  p {
+    color: var(--text-dim);
+    margin: 0;
+  }
+}
+
+// ========== Table Styling ==========
+::ng-deep {
+  .purchases-wrapper {
+    p-table {
+      &.p-datatable {
+        background: transparent !important;
+        border: none !important;
+
+        .p-datatable-header {
+          background: transparent !important;
+          border: none !important;
+          padding: 0 !important;
+        }
+
+        .p-datatable-thead > tr > th {
+          background: rgba(255, 255, 255, 0.05) !important;
+          color: var(--text-main) !important;
+          padding: 1rem !important;
+          text-align: right !important;
+          border: none !important;
+          font-weight: 600 !important;
+          border-bottom: 1px solid var(--border-light) !important;
+        }
+
+        .p-datatable-tbody {
+          > tr {
+            background: transparent !important;
+            border-bottom: 1px solid var(--border-light) !important;
+            transition: all 0.2s ease !important;
+
+            &:hover {
+              background: rgba(249, 115, 22, 0.08) !important;
+            }
+
+            > td {
+              color: var(--text-main) !important;
+              padding: 1rem !important;
+              text-align: right !important;
+              border: none !important;
+            }
+          }
+        }
+
+        .p-paginator {
+          background: rgba(255, 255, 255, 0.02) !important;
+          border: 1px solid var(--border-light) !important;
+          border-top: 1px solid var(--border-light) !important;
+          padding: 1rem !important;
+          margin-top: 1rem !important;
+          border-radius: 0 0 12px 12px !important;
+
+          .p-paginator-rpp-options {
+            color: var(--text-dim) !important;
+          }
+        }
+
+        .p-paginator-current {
+          color: var(--text-dim) !important;
+          margin: 0 1rem !important;
+        }
+      }
+    }
+  }
+
+  .purchases-wrapper {
+    .p-tag {
+      background: var(--orange-grad) !important;
+      color: white !important;
+
+      &.p-tag-warn {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: var(--text-dim) !important;
+      }
+    }
+  }
+}
+
+// ========== Row Scaling Effect ==========
+.row-scaling-effect {
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: scale(1.01);
+  }
+}
+
+// ========== Unique ID Text ==========
+.unique-id-text {
+  color: var(--text-dim);
+  font-family: monospace;
+  font-size: 0.85rem;
+}
+
+// ========== Animations ==========
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

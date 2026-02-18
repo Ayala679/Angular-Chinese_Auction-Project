@@ -1,7 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
 import { CreateDonor, ManagerGetDonor } from '../models/donor.model';
 import { Observable } from 'rxjs';
 
@@ -10,22 +9,22 @@ import { Observable } from 'rxjs';
 })
 export class DonorService {
   baseUrl: string = 'https://localhost:7031/api/Donor';
-  constructor(private http: HttpClient, private cookieService: CookieService) { }
+  constructor(private http: HttpClient) { }
 
   getDonors(): Observable<ManagerGetDonor[]> {
-    const token = this.cookieService.get('authToken');
+    const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.get<ManagerGetDonor[]>(`${this.baseUrl}`, { headers });
   }
 
   getDonorById(id: number): Observable<ManagerGetDonor> {
-    const token = this.cookieService.get('authToken');
+    const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.get<ManagerGetDonor>(`${this.baseUrl}/${id}`, { headers });
   }
 
   addDonor(donorData: CreateDonor, imageFile: File | null): Observable<ManagerGetDonor> {
-    const token = this.cookieService.get('authToken');
+    const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     const formData = new FormData();
     formData.append('Email', donorData.email || '');
@@ -46,7 +45,7 @@ export class DonorService {
   }
 
   updateDonor(id: number, donorData: Partial<CreateDonor>, imageFile: File | null): Observable<ManagerGetDonor> {
-    const token = this.cookieService.get('authToken');
+    const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     const formData = new FormData();
     if (donorData.email) formData.append('email', donorData.email);
@@ -64,13 +63,13 @@ export class DonorService {
   }
 
   deleteDonor(id: number): Observable<string> {
-    const token = this.cookieService.get('authToken');
+    const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` })
     return this.http.delete<string>(`${this.baseUrl}/${id}`, { headers, responseType: 'text' as 'json' });
   }
 
   getFilteredDonors(name?: string, email?: string, giftName?: string): Observable<ManagerGetDonor[]> {
-    const token = this.cookieService.get('authToken');
+    const token = localStorage.getItem('authToken');
     const headers = new HttpHeaders({ 'Authorization': `Bearer ${token}` });
     let params = new HttpParams();
     if (name && name.trim()) params = params.set('name', name.trim());

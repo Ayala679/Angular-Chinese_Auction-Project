@@ -1,7 +1,11 @@
 <div class="card p-4" [formGroup]="giftForm" dir="rtl">
     
     <h3 class="mt-0 mb-5 text-primary">
-        {{ config.data.name ? 'עריכת תרומה: ' + config.data.name : 'הוספת מתנה חדשה' }}
+        @if (config && config.data) {
+            {{ config.data.name ? 'עריכת תרומה: ' + config.data.name : 'הוספת מתנה חדשה' }}
+        } @else {
+            הוספת מתנה חדשה
+        }
     </h3>
 
     <div class="flex flex-column gap-2 mb-4">

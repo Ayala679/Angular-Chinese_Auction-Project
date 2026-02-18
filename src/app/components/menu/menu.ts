@@ -6,7 +6,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { BadgeModule } from 'primeng/badge';
 import { AvatarModule } from 'primeng/avatar';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, switchMap } from 'rxjs/operators';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonGroupModule } from 'primeng/buttongroup';
 import { AuthenticateService } from '../../services/authenticate-service';
@@ -18,6 +18,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { GiftService } from '../../services/gift-service';
 import { PurchaseService } from '../../services/purchase-service';
+import { UserService } from '../../services/user-service';
 import { forkJoin, of } from 'rxjs';
 import { DialogModule } from 'primeng/dialog';
 import { finalize } from 'rxjs/operators';
@@ -47,6 +48,7 @@ export class Menu implements OnInit {
     sidebarVisible: boolean = false;
     searchValue: string = '';
     private purchaseService = inject(PurchaseService);
+    private userService = inject(UserService);
     categories: any[] = [];
     router = inject(Router);
     gifts: any[] = [];
@@ -65,6 +67,7 @@ export class Menu implements OnInit {
         winner?: string | null,
         icon?: string
     }[] = [];
+
 
     onLogout(event?: MouseEvent) {
         if (event) {
@@ -110,54 +113,168 @@ export class Menu implements OnInit {
     }
 
 
+    // lottery() {
+    //     this.displayConfirmLottery = true;
+    // }
+
+    // runLottery() {
+    //     this.displayConfirmLottery = false;
+    //     this.isLoading = true;
+
+    //     this.giftService.getGifts().subscribe({
+    //         next: (data: any[]) => {
+    //             const requests = data.map(gift =>
+    //                 this.purchaseService.runLottery(gift.id).pipe(
+    //                     map((res: any) => ({
+    //                         name: gift.name,
+    //                         status: 'הושלם',
+    //                         winner: res?.firstName || 'נבחר זוכה',
+    //                         message: 'הגרלה הושלמה',
+    //                         severity: 'text-green-500',
+    //                         icon: 'pi pi-check-circle'
+    //                     })),
+    //                     catchError(err => of({
+    //                         name: gift.name,
+    //                         status: 'נכשל',
+    //                         winner: null,
+    //                         message: err.error?.message || 'אין משתתפים',
+    //                         severity: 'text-red-500',
+    //                         icon: 'pi pi-times-circle'
+    //                     }))
+    //                 )
+    //             );
+    //             forkJoin(requests).pipe(
+    //                 finalize(() => {
+    //                     this.isLoading = false;
+    //                 })
+
+    //             ).subscribe((results: any[]) => {
+    //                 this.lotteryResults = results;
+    //                 this.isLoading = false;
+
+    //                 setTimeout(() => {
+    //                     this.displayLotteryResults = true;
+    //                     this.cdr.detectChanges();
+    //                 }, 200);
+    //             });
+    //         },
+    //         error: () => {
+    //             this.isLoading = false;
+    //         }
+    //     });
+    // }
+
     lottery() {
         this.displayConfirmLottery = true;
     }
 
-    runLottery() {
-        this.displayConfirmLottery = false;
-        this.isLoading = true;
+    //     runLottery() {
+    //     this.displayConfirmLottery = false;
+    //     this.isLoading = true;
 
-        this.giftService.getGifts().subscribe({
-            next: (data: any[]) => {
-                const requests = data.map(gift =>
-                    this.purchaseService.runLottery(gift.id).pipe(
-                        map((res: any) => ({
+    //     this.giftService.getGifts().subscribe({
+    //         next: (data: any[]) => {
+    //             const requests = data.map(gift =>
+    //                 this.purchaseService.runLottery(gift.id).pipe(
+    //                     switchMap(() => this.userService.getUserById(gift.id).pipe(
+    //                         map((winner: any) => ({
+    //                             name: gift.name,
+    //                             status: 'הושלם',
+    //                             winner: winner ? `${winner.first_name} ${winner.last_name}` : 'נבחר זוכה',
+    //                             message: 'הגרלה הושלמה בהצלחה',
+    //                             severity: 'text-green-500',
+    //                             icon: 'pi pi-check-circle'
+    //                         })),
+    //                         catchError(err => of({
+    //                             name: gift.name,
+    //                             status: 'נכשל',
+    //                             winner: null,
+    //                             message: 'לא נמצא זוכה או שגיאה בקבלת הנתונים',
+    //                             severity: 'text-orange-500',
+    //                             icon: 'pi pi-exclamation-triangle'
+    //                         }))
+    //                     )),
+    //                     catchError(err => of({
+    //                         name: gift.name,
+    //                         status: 'נכשל',
+    //                         winner: null,
+    //                         message: err.error?.message || 'אין משתתפים להגרלה זו',
+    //                         severity: 'text-red-500',
+    //                         icon: 'pi pi-times-circle'
+    //                     }))
+    //                 )
+    //             );
+
+    //             forkJoin(requests).pipe(
+    //                 finalize(() => {
+    //                     this.isLoading = false;
+    //                     this.cdr.detectChanges();
+    //                 })
+    //             ).subscribe((results: any[]) => {
+    //                 this.lotteryResults = results;
+    //                 setTimeout(() => {
+    //                     this.displayLotteryResults = true;
+    //                     this.cdr.detectChanges();
+    //                 }, 200);
+    //             });
+    //         },
+    //         error: () => {
+    //             this.isLoading = false;
+    //         }
+    //     });
+    // }
+
+   runLottery() {
+    this.displayConfirmLottery = false;
+    this.isLoading = true;
+
+    this.giftService.getGifts().subscribe({
+        next: (data: any[]) => {
+            const requests = data.map(gift =>
+                this.purchaseService.runLottery(gift.id).pipe(
+                    
+                    map((res: any) => {
+                        console.log(res);
+                        return ({
                             name: gift.name,
                             status: 'הושלם',
-                            winner: res?.firstName || 'נבחר זוכה',
+                            // winner: res?.user?.first_name || 'נבחר זוכה',
                             message: 'הגרלה הושלמה',
                             severity: 'text-green-500',
-                            icon: 'pi pi-check-circle'
-                        })),
-                        catchError(err => of({
-                            name: gift.name,
-                            status: 'נכשל',
-                            winner: null,
-                            message: err.error?.message || 'אין משתתפים',
-                            severity: 'text-red-500',
-                            icon: 'pi pi-times-circle'
-                        }))
-                    )
-                );
-                forkJoin(requests).pipe(
-                    finalize(() => {
-                        this.isLoading = false;
-                    })
+                            icon: 'pi pi-check-circle',
+                        })
+                    }
+                    ),
 
-                ).subscribe((results: any[]) => {
-                    this.lotteryResults = results;
+                    catchError(err => of({
+                        name: gift.name,
+                        status: 'נכשל',
+                        // winner: null,
+                        message: err.error?.message || 'אין משתתפים',
+                        severity: 'text-red-500',
+                        icon: 'pi pi-times-circle'
+                    }))
+                )
+            );
+            
+            forkJoin(requests).pipe(
+                finalize(() => {
                     this.isLoading = false;
+                })
 
-                    setTimeout(() => {
-                        this.displayLotteryResults = true;
-                        this.cdr.detectChanges();
-                    }, 200);
-                });
-            },
-            error: () => {
+            ).subscribe((results: any[]) => {
+                this.lotteryResults = results;
                 this.isLoading = false;
-            }
-        });
-    }
+
+                setTimeout(() => {
+                    this.displayLotteryResults = true;
+                    this.cdr.detectChanges();
+                }, 200);
+            });
+        },
+        error: () => {
+            this.isLoading = false;
+        }
+    });
+}
 }

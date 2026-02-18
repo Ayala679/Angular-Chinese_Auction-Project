@@ -12,7 +12,6 @@ import { map } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialog } from 'primeng/confirmdialog';
-import { CookieService } from 'ngx-cookie-service';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
@@ -28,7 +27,6 @@ export class GetAllPackages implements OnInit {
   confirmationService = inject(ConfirmationService);
   dialogService = inject(DialogService);
   packageService = inject(PackageService);
-  private cookieService = inject(CookieService);
   user: string = '';
   role: string = '1'; // ברירת מחדל כמשתמש רגיל
   userPackages: any[] = [];
@@ -46,12 +44,12 @@ export class GetAllPackages implements OnInit {
   ref: DynamicDialogRef<any> | null = null;
 
   ngOnInit() {
-    this.user = this.cookieService.get('user') || '';
+    this.user = localStorage.getItem('user') || '';
     if (this.user && this.user !== 'undefined') {
       const parsedUser = JSON.parse(this.user);
       // הבטחה שה-role יישמר כמחרוזת לצורך השוואה תקינה ב-HTML
       this.role = parsedUser.role !== undefined ? parsedUser.role.toString() : '1';
-      this.userPackages = JSON.parse(this.cookieService.get(parsedUser.id) || '[]');
+      this.userPackages = JSON.parse(localStorage.getItem(parsedUser.id) || '[]');
     }
   }
 
@@ -136,7 +134,7 @@ export class GetAllPackages implements OnInit {
       cards: []
     });
     const u = JSON.parse(this.user).id;
-this.cookieService.set(u, JSON.stringify(this.userPackages), { path: '/' });  }
+localStorage.setItem(u, JSON.stringify(this.userPackages));  }
 
   removePackage(packageData: any) {
     if (packageData.quantity === 0)
@@ -159,7 +157,7 @@ this.cookieService.set(u, JSON.stringify(this.userPackages), { path: '/' });  }
           }
           return true;
         }).reverse();
-        this.cookieService.set(JSON.parse(this.user).id, JSON.stringify(this.userPackages));
+        localStorage.setItem(JSON.parse(this.user).id, JSON.stringify(this.userPackages));
         this.messageService.add({ severity: 'info', summary: 'החבילה נמחקה' });
         packageData.quantity = (packageData.quantity || 0) > 0 ? packageData.quantity - 1 : 0;
       }

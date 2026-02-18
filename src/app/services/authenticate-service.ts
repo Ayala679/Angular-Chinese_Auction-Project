@@ -16,11 +16,11 @@ export class AuthenticateService {
   user$ = this.userSubject.asObservable();
 
   constructor(private http: HttpClient, private cookieService: CookieService) {
-    const userCookie = this.cookieService.get('user');
+    const userStorage = localStorage.getItem('user');
 
-    if (userCookie && userCookie !== 'undefined' && userCookie !== '') {
+    if (userStorage && userStorage !== 'undefined' && userStorage !== '') {
       try {
-        this.userSubject.next(JSON.parse(userCookie) as GetUser);
+        this.userSubject.next(JSON.parse(userStorage) as GetUser);
       } catch (e) {
         this.userSubject.next(null);
       }
@@ -33,17 +33,15 @@ export class AuthenticateService {
     const loginRequest: LoginRequest = { email: email, password: password };
     return this.http.post<LoginResponse>(`${this.baseUrl}/login`, loginRequest).pipe(
       tap(response => {
-        this.cookieService.set('authToken', response.token);
-        this.cookieService.set('user', JSON.stringify(response.user));
-        // Update subject with proper type
+        localStorage.setItem('user', JSON.stringify(response.user));
+        localStorage.setItem('authToken', response.token); 
         this.userSubject.next(response.user);
       })
     );
   }
 
   logout(): void {
-    this.cookieService.delete('user');
-    this.cookieService.delete('authToken');
+    localStorage.removeItem('user');
     this.userSubject.next(null);
   }
 
@@ -57,4 +55,6 @@ export class AuthenticateService {
     };
     return this.http.post<GetUser>(`${this.baseUrl}/register`, newUser);
   }
+
+
 }
